@@ -28,7 +28,7 @@ private:
     Ui::MainWindow *ui;
     QUdpSocket *udpSocket;
     void send(QString str);
-    void place(void);
+    void place(int x, int y);
     void win(void);
     void lose(void);
 };

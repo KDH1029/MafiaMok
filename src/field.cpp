@@ -2,6 +2,7 @@
 #define LEN 5
 
 #include "field.h"
+#include <iostream>
 
 Node::Node(int x, int y)
 {
@@ -54,6 +55,19 @@ bool Field::place(int x, int y, int value)
     if (this->field[y][x]->value == 0)
     {
         this->field[y][x]->value = value;
+
+        for (int i = 0; i < BOARD_SIZE; i++)
+        {
+            for (int j = 0; j < BOARD_SIZE; j++)
+            {
+                std::cout << this->field[i][j]->value;
+            }
+            std::cout << std::endl;
+        }
+
+        std::cout << std::endl
+                  << std::endl
+                  << std::endl;
         return true;
     }
     return false;

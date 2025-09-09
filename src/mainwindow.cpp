@@ -4,6 +4,8 @@
 #include "./ui_mainwindow.h"
 #include <QUdpSocket>
 
+#include <iostream>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -40,8 +42,8 @@ void MainWindow::get_udp()
             int x = arr[0].toInt();
             int y = arr[1].toInt();
             int value = arr[2].toInt();
-            field->place(x, y, value);
-            if (field->check(x, y)) {
+            this->field->place(x, y, value);
+            if (this->field->check()) {
                 this->lose();
             }
         }
@@ -68,4 +70,12 @@ void MainWindow::place(int x, int y)
             }
         }
     }
+}
+
+void MainWindow::win() {
+    std::cout<<"win";
+}
+
+void MainWindow::lose() {
+    std::cout<<"lose";
 }
