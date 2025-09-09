@@ -49,6 +49,8 @@ set(UI_FILES
     ui/mainwindow.ui
 )
 
+
+
 if(QT_VERSION_MAJOR EQUAL 6)
     qt6_wrap_cpp(MOC_SOURCES ${HEADERS})
     qt6_wrap_ui(UIC_SOURCES ${UI_FILES})
