@@ -16,13 +16,11 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    void addBubble(const QString &message, bool isSender);
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 private slots:
     void get_udp();
-    void on_pushButton_clicked();
 
 private:
     Ui::MainWindow *ui;
