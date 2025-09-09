@@ -12,9 +12,11 @@ public:
 class Field
 {
 private:
-    std::vector<std::vector<Node*>> field;
+    std::vector<std::vector<Node *>> field;
+    int x, y;
 
 public:
     Field(void);
-    void placeStone(int x, int y, int value);
+    bool place(int x, int y, int value);
+    bool check(void);
 };
