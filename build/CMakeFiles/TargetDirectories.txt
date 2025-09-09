@@ -1,3 +1,0 @@
-/home/yu/Documents/GitHub/MafiaMook/build/CMakeFiles/MafiaMook.dir
-/home/yu/Documents/GitHub/MafiaMook/build/CMakeFiles/edit_cache.dir
-/home/yu/Documents/GitHub/MafiaMook/build/CMakeFiles/rebuild_cache.dir
