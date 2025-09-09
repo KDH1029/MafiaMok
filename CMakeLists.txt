@@ -39,10 +39,12 @@ endif()
 set(SOURCES
 src/main.cpp
 src/mainwindow.cpp
+src/field.cpp
 )
 # Header files
 set(HEADERS
 include/mainwindow.h
+include/field.h
 )
 # UI files
 set(UI_FILES

@@ -10,6 +10,8 @@ MainWindow::MainWindow(QWidget *parent)
     udpSocket = new QUdpSocket(this);
     udpSocket->bind(QHostAddress::Any, 9999);
     connect(udpSocket, &QUdpSocket::readyRead, this, &MainWindow::get_udp);
+
+    this->field = new Field();
 }
 
 MainWindow::~MainWindow()

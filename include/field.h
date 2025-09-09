@@ -12,7 +12,7 @@ public:
 class Field
 {
 private:
-    std::vector<std::vector<Node>> field;
+    std::vector<std::vector<Node*>> field;
 
 public:
     Field(void);

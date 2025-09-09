@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QUdpSocket>
+#include "field.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -16,6 +17,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    Field *field;
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
