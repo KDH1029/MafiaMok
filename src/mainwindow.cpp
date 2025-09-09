@@ -1,10 +1,18 @@
+#define IP "192.168.0.37"
+
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include <QUdpSocket>
+<<<<<<< HEAD
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QScrollBar>
 using namespace std;
+=======
+
+#include <iostream>
+
+>>>>>>> 40943c50967b16afd0c10e393916371be9ee2eb3
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -25,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
     udpSocket->bind(QHostAddress::Any, 9999);
     connect(udpSocket, &QUdpSocket::readyRead, this, &MainWindow::get_udp);
 
+<<<<<<< HEAD
     drawBoard();
 
     //QWidget *container = new QWidget(this);
@@ -33,6 +42,9 @@ MainWindow::MainWindow(QWidget *parent)
     //ui->scrollArea->setWidget(container);
     //ui->scrollArea->setWidgetResizable(false);
     //ui->scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+=======
+    this->field = new Field();
+>>>>>>> 40943c50967b16afd0c10e393916371be9ee2eb3
 }
 
 MainWindow::~MainWindow()
@@ -52,6 +64,7 @@ void MainWindow::get_udp()
         udpSocket->readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
 
         QString message = QString::fromUtf8(datagram);
+<<<<<<< HEAD
         //addBubble(message, false);
     }
 }
@@ -158,3 +171,49 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event) {
     }
     return QMainWindow::eventFilter(obj, event);
 }
+=======
+        QStringList arr = message.split(",");
+
+        if (arr.size() == 3) {
+            this->field->turn = true;
+            int x = arr[0].toInt();
+            int y = arr[1].toInt();
+            int value = arr[2].toInt();
+            this->field->place(x, y, value);
+            if (this->field->check()) {
+                this->lose();
+            }
+        }
+    }
+}
+
+void MainWindow::send(QString str)
+{
+    udpSocket->writeDatagram(str.toUtf8(), QHostAddress(IP), 9999);
+}
+
+void MainWindow::place(int x, int y)
+{
+    //자신 턴인지 확인
+    if (this->field->turn)
+    {
+        //빈 공간인지 확인
+        if(this->field->place(x,y,this->field->color)){
+            send(QString("%1,%2").arg(x).arg(y));
+            this->field->turn = false;
+            //승리 여부 판단
+            if(this->field->check()){
+                this->win();
+            }
+        }
+    }
+}
+
+void MainWindow::win() {
+    std::cout<<"win";
+}
+
+void MainWindow::lose() {
+    std::cout<<"lose";
+}
+>>>>>>> 40943c50967b16afd0c10e393916371be9ee2eb3
