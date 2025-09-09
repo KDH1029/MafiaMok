@@ -27,6 +27,8 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QUdpSocket *udpSocket;
+    void send(QString str);
+    void place(void);
 };
 
 #endif // MAINWINDOW_H

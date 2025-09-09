@@ -13,9 +13,10 @@ class Field
 {
 private:
     std::vector<std::vector<Node *>> field;
-    int x, y;
 
 public:
+    int x, y, color;
+    bool turn;
     Field(void);
     bool place(int x, int y, int value);
     bool check(void);
