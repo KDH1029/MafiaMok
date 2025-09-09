@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(hw1 VERSION 1.0 LANGUAGES CXX)
+project(MafiaMook VERSION 1.0 LANGUAGES CXX)
 
 # C++ configuring
 set(CMAKE_CXX_STANDARD 11)
@@ -35,7 +35,6 @@ else()
     message(STATUS "Found Qt5: ${Qt5_VERSION}")
 endif()
 
-# 과제 공지란
 # Source files
 set(SOURCES
 src/main.cpp
