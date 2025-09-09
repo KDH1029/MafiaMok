@@ -33,6 +33,18 @@ void MainWindow::get_udp()
         udpSocket->readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
 
         QString message = QString::fromUtf8(datagram);
+        QStringList arr = message.split(",");
+
+        if (arr.size() == 3) {
+            this->field->turn = true;
+            int x = arr[0].toInt();
+            int y = arr[1].toInt();
+            int value = arr[2].toInt();
+            field->place(x, y, value);
+            if (field->check(x, y)) {
+                this->lose();
+            }
+        }
     }
 }
 
@@ -50,6 +62,10 @@ void MainWindow::place(int x, int y)
         if(this->field->place(x,y,this->field->color)){
             send(QString("%1,%2").arg(x).arg(y));
             this->field->turn = false;
+            //승리 여부 판단
+            if(this->field->check()){
+                this->win();
+            }
         }
     }
 }

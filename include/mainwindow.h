@@ -29,6 +29,8 @@ private:
     QUdpSocket *udpSocket;
     void send(QString str);
     void place(void);
+    void win(void);
+    void lose(void);
 };
 
 #endif // MAINWINDOW_H
