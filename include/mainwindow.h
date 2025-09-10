@@ -24,6 +24,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    QGraphicsEllipseItem *stoneItems[20][20];
     bool eventFilter(QObject *obj, QEvent *event);
     void on_actionOpen_Image_triggered();
     void drawBoard();
