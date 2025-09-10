@@ -1,3 +1,5 @@
+#include "setting.h"
+
 #define BOARD_SIZE 19
 #define LEN 5
 
