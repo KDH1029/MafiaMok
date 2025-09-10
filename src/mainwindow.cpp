@@ -180,7 +180,7 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
         }
         else
         { // 자신 돌 제거-->무조건 제거
-            if(this->field->remove(row, col);){
+            if(this->field->remove(cell.x(), cell.y())){
                 this->udp->send(QString("%1,%2,0").arg(cell.x()).arg(cell.y()));
                 removeStone(cell.x(), cell.y());
                 ui->label->setText("Stone Distroied");
