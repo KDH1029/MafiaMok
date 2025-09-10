@@ -115,9 +115,11 @@ void MainWindow::placeStone(int row, int col, int value)
 
     if (this->field->check())
     {
-        qDebug() << "P1 win and P2 Lose!"; // 플레이어1 승리조건
-        win_event = true;
-        End_event(win_event);
+        this->field->turn = false;
+        if(value = this->field->team)
+            qDebug() << "Win!"; // 플레이어2 승리조건
+        else
+            qDebug() << "Lose!"; // 플레이어1 승리조건
     }
 }
 
@@ -250,19 +252,6 @@ void MainWindow::on_radioButton_2_clicked()
 void MainWindow::on_radioButton_3_clicked()
 {
     playchoice = 2; // 돌 회유
-}
-
-void MainWindow::End_event(bool identify)
-{
-    if (identify)
-    {
-        this->field->turn = false;
-    }
-    else
-        this->field->turn = true; // 다시 시작.
-
-    restart=true;
-
 }
 
 void MainWindow::on_pushButton_clicked()
