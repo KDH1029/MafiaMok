@@ -18,7 +18,8 @@ public:
     void send(const QString &str);
 
 signals:
-    void received(Point p);
+    void pointReceived(Point p);
+    void cmdReceived(const QString &cmd);
 
 private slots:
     void get_udp();

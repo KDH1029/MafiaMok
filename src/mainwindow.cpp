@@ -35,7 +35,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     this->field = new Field();
     this->udp = new Udp(this);
-    connect(this->udp, &Udp::received, this, &MainWindow::handlePoint);
+    connect(this->udp, &Udp::pointReceived, this, &MainWindow::handlePoint);
+    connect(this->udp, &Udp::cmdReceived, this, &MainWindow::handleCmd);
 
     this->stoneItems[20][20] = {nullptr}; // 최대 20x20 오목판 가정
     drawBoard();
@@ -71,6 +72,11 @@ void MainWindow::handlePoint(Point p)
     {
         // err: 턴 오류
     }
+}
+
+void MainWindow::handleCmd(const QString &cmd)
+{
+
 }
 
 void MainWindow::drawBoard()
