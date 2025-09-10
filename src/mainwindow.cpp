@@ -39,6 +39,16 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this->udp, &Udp::pointReceived, this, &MainWindow::handlePoint);
     connect(this->udp, &Udp::cmdReceived, this, &MainWindow::handleCmd);
 
+    QWidget *container = new QWidget(this);
+    container->setMinimumSize(1, 1);
+    container->setFixedWidth(ui->scrollArea->width());
+    ui->scrollArea->setWidget(container);
+    ui->scrollArea->setWidgetResizable(false);
+    ui->scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    this->stoneItems[20][20] = {nullptr}; // 최대 20x20 오목판 가정
+    drawBoard();
+
 #if Player
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -58,16 +68,6 @@ MainWindow::MainWindow(QWidget *parent)
         this->udp->send("FIRST");
     }
 #endif
-
-    QWidget *container = new QWidget(this);
-    container->setMinimumSize(1, 1);
-    container->setFixedWidth(ui->scrollArea->width());
-    ui->scrollArea->setWidget(container);
-    ui->scrollArea->setWidgetResizable(false);
-    ui->scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
-    this->stoneItems[20][20] = {nullptr}; // 최대 20x20 오목판 가정
-    drawBoard();
 }
 
 MainWindow::~MainWindow()
@@ -350,12 +350,12 @@ void MainWindow::on_pushButton_2_clicked()
     ui->label->setText("Game restarted!");
     this->udp->send("RESET");
 
-    radioButton->setAutoExclusive(false); // 독점 해제
-    radioButton->setChecked(false);       // 체크 해제
-    radioButton_2->setAutoExclusive(false); // 독점 해제
-    radioButton_2->setChecked(false);       // 체크 해제
-    radioButton_3->setAutoExclusive(false); // 독점 해제
-    radioButton_3->setChecked(false);       // 체크 해제
+    ui->radioButton->setAutoExclusive(false);   // 독점 해제
+    ui->radioButton->setChecked(false);         // 체크 해제
+    ui->radioButton_2->setAutoExclusive(false); // 독점 해제
+    ui->radioButton_2->setChecked(false);       // 체크 해제
+    ui->radioButton_3->setAutoExclusive(false); // 독점 해제
+    ui->radioButton_3->setChecked(false);       // 체크 해제
 
 #if Player
     std::random_device rd;
