@@ -67,13 +67,14 @@ void MainWindow::handlePoint(Point p)
         case 2:
             placeStone(p.x, p.y, p.value);
             break;
-        }
-    case 5:
+
+        case 5:{
         if (this->field->seduce(p.x, p.y))
         {
             this->field->turn = true;
         }
-        break;
+        break;}
+        }
     }
     else
     {
