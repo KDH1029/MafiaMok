@@ -113,9 +113,9 @@ void MainWindow::placeStone(int row, int col, int value)
 
     if (this->field->check())
     {
-
         qDebug() << "P1 win and P2 Lose!"; // 플레이어1 승리조건
         win_event = true;
+        End_event(win_event);
     }
 }
 
@@ -191,6 +191,7 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
                 {
                     qDebug() << "You Lose!"; // 사용자 패배 조건(목숨이 깎이는 경우는 돌을 잘못 지우는 경우밖에 없으므로)
                     win_event = true;
+                    End_event(win_event);
                 }
             }
             this->udp->send(QString("%1,%2,0").arg(cell.x()).arg(cell.y()));
