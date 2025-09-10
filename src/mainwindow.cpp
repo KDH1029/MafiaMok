@@ -128,7 +128,6 @@ void MainWindow::removeStone(int row, int col)
         scene->removeItem(stoneItems[row][col]);
         delete stoneItems[row][col]; // 메모리 정리
         stoneItems[row][col] = nullptr;
-        this->field->remove(row, col);
     }
 }
 
@@ -181,8 +180,9 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
         }
         else
         { // 자신 돌 제거-->무조건 제거
-            if(removeStone(cell.x(), cell.y())){
+            if(this->field->remove(row, col);){
                 this->udp->send(QString("%1,%2,0").arg(cell.x()).arg(cell.y()));
+                removeStone(cell.x(), cell.y());
                 ui->label->setText("Stone Distroied");
                 if (state == 4)
                 {
@@ -251,8 +251,6 @@ void MainWindow::on_radioButton_3_clicked()
     playchoice = 2; // 돌 회유
 }
 
-<<<<<<< Updated upstream
-=======
 void MainWindow::End_event(bool identify)
 {
     if (identify)
@@ -263,7 +261,6 @@ void MainWindow::End_event(bool identify)
         this->field->turn = true; // 다시 시작.
 }
 
->>>>>>> Stashed changes
 void MainWindow::on_pushButton_clicked()
 {
     QApplication::quit();
