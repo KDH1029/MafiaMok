@@ -49,12 +49,11 @@ private:
     Field *field;
     Udp *udp;
     QGraphicsScene* scene;
-    QVector<QVector<int>> board; // 0:빈칸, 1:플레이어1, 2:플레이어2
-    QVector<QVector<int>> mafia_bord; // 0:일반돌, 1:마피아
+    QVector<QVector<int>> board; // 0:빈칸, 1:플레이어1, 2:플레이어2, 3:플레이어1돌 중 마피아돌, 4:플레이어2돌 중 마피아돌
     int boardSize = 19;          // 오목판 19x19
     int cellSize = 60;    // 각 칸 크기
     QPointF mapToCell(const QPointF& pos);
-    bool playchoice[3];
+    int playchoice;
     int player;
     int player2;
     int player_life;
