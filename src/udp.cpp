@@ -1,5 +1,7 @@
 
-#if player
+#include "field.h"
+
+#if Player
 #define IP "192.168.0.37"
 #else
 #define IP "192.168.0.45"
