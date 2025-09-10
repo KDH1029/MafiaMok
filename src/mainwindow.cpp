@@ -315,16 +315,28 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 void MainWindow::on_radioButton_clicked()
 {
     playchoice = 0; // 돌 놓기
+    ui->radioButton_2->setAutoExclusive(false);
+    ui->radioButton_2->setChecked(false);
+    ui->radioButton_3->setAutoExclusive(false);
+    ui->radioButton_3->setChecked(false);
 }
 
 void MainWindow::on_radioButton_2_clicked()
 {
     playchoice = 1; // 돌 파괴
+    ui->radioButton->setAutoExclusive(false);
+    ui->radioButton->setChecked(false);
+    ui->radioButton_3->setAutoExclusive(false);
+    ui->radioButton_3->setChecked(false);
 }
 
 void MainWindow::on_radioButton_3_clicked()
 {
     playchoice = 2; // 돌 회유
+    ui->radioButton->setAutoExclusive(false);
+    ui->radioButton->setChecked(false);
+    ui->radioButton_2->setAutoExclusive(false);
+    ui->radioButton_2->setChecked(false);
 }
 void MainWindow::on_pushButton_clicked()
 {
@@ -350,12 +362,12 @@ void MainWindow::on_pushButton_2_clicked()
     ui->label->setText("Game restarted!");
     this->udp->send("RESET");
 
-    ui->radioButton->setAutoExclusive(false);   // 독점 해제
-    ui->radioButton->setChecked(false);         // 체크 해제
-    ui->radioButton_2->setAutoExclusive(false); // 독점 해제
-    ui->radioButton_2->setChecked(false);       // 체크 해제
-    ui->radioButton_3->setAutoExclusive(false); // 독점 해제
-    ui->radioButton_3->setChecked(false);       // 체크 해제
+    ui->radioButton->setAutoExclusive(false);
+    ui->radioButton->setChecked(false);
+    ui->radioButton_2->setAutoExclusive(false);
+    ui->radioButton_2->setChecked(false);
+    ui->radioButton_3->setAutoExclusive(false);
+    ui->radioButton_3->setChecked(false);
 
 #if Player
     std::random_device rd;
