@@ -181,24 +181,25 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
         }
         else
         { // 자신 돌 제거-->무조건 제거
-            removeStone(cell.x(), cell.y());
-            ui->label->setText("Stone Distroied");
-            if (state == 4)
-            {
-                this->field->board[cell.x()][cell.y()]->value = 0;
-            } // 플레이어쪽 잠입 맞으면 마피아 삭제
-            else
-            {
-                player_life--;
-                cout << "선량한 시민 돌이 사망했습니다..." << endl;
-                // addBubble("선량한 시민 돌이 사망했습니다...");
-                if (player_life <= 0)
+            if(removeStone(cell.x(), cell.y())){
+                this->udp->send(QString("%1,%2,0").arg(cell.x()).arg(cell.y()));
+                ui->label->setText("Stone Distroied");
+                if (state == 4)
                 {
-                    qDebug() << "You Lose!"; // 사용자 패배 조건(목숨이 깎이는 경우는 돌을 잘못 지우는 경우밖에 없으므로)
-                    this->field->turn = false;
+                    this->field->board[cell.x()][cell.y()]->value = 0;
+                } // 플레이어쪽 잠입 맞으면 마피아 삭제
+                else
+                {
+                    player_life--;
+                    cout << "선량한 시민 돌이 사망했습니다..." << endl;
+                    // addBubble("선량한 시민 돌이 사망했습니다...");
+                    if (player_life <= 0)
+                    {
+                        qDebug() << "You Lose!"; // 사용자 패배 조건(목숨이 깎이는 경우는 돌을 잘못 지우는 경우밖에 없으므로)
+                        this->field->turn = false;
+                    }
                 }
             }
-            this->udp->send(QString("%1,%2,0").arg(cell.x()).arg(cell.y()));
         }
     }
 
