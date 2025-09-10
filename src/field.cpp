@@ -113,7 +113,7 @@ bool Field::check(void)
     for (int i = 0; i < 4; i++)
     {
         Node *node = this->board[y][x];
-        int state = node->value;
+        int state = node->value < 3 ? node->value : node->value - 2;
         int count = 1;
         while (node->neighbor[i] && (node->neighbor[i]->value == state || node->neighbor[i]->value == state + 2))
         {
