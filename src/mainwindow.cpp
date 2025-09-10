@@ -111,7 +111,7 @@ void MainWindow::placeStone(int row, int col, int value)
         win_event=true;
     }
 
-
+    this->udp->send(QString("%1,%2,%3").arg(row).arg(col).arg(value));
 }
 
 // 돌 제거 함수
