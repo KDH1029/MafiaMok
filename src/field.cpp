@@ -50,6 +50,10 @@ Field::Field(void)
 
 bool Field::place(int x, int y, int value)
 {
+    if (x < 0 || x >= BOARD_SIZE || y < 0 || y >= BOARD_SIZE)
+    {
+        return false;
+    }
     this->x = x;
     this->y = y;
     if (this->board[y][x]->value == 0)

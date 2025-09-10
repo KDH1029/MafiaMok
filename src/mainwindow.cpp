@@ -74,6 +74,8 @@ void MainWindow::handlePoint(Point p)
         this->field.turn = true;
     }else{
         //err: 턴 오류
+
+        this->field.place(0,0,1);
     }
 }
 
