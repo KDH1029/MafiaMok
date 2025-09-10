@@ -202,6 +202,8 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
         return;
     }
 
+
+
 }
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
