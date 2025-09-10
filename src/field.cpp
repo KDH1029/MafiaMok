@@ -9,7 +9,7 @@ Node::Node(int x, int y)
 {
     this->x = x;
     this->y = y;
-    this->value = 0; //0:없음 1:플1 2:플2 3:플1의 조력자 마피아 4:플2의 조력자 마피아
+    this->value = 0; // 0:없음 1:플1 2:플2 3:플1의 조력자 마피아 4:플2의 조력자 마피아
 }
 
 Field::Field(void)
@@ -91,21 +91,20 @@ bool Field::check(void)
         Node *node = this->board[y][x];
         int state = node->value;
         int count = 1;
-        while (node->neighbor[i] && (node->neighbor[i]->value == state||node->neighbor[i]->value == state+2))
+        while (node->neighbor[i] && (node->neighbor[i]->value == state || node->neighbor[i]->value == 5 - state))
         {
             node = node->neighbor[i];
         }
-        while (node->neighbor[7 - i] && node->neighbor[7 - i]->value == state)
+        while (node->neighbor[7 - i] && (node->neighbor[7 - i]->value == state || node->neighbor[7 - i]->value == 5 - state))
         {
             node = node->neighbor[7 - i];
             count++;
         }
 
-        if (count >= LEN) //플레이어 1 승리조건
+        if (count >= LEN) // 플레이어 1 승리조건
         {
             return true;
         }
     }
     return false;
 }
-
