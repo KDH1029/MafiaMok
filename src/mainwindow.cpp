@@ -172,7 +172,7 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
 
     else if (playchoice == 1 && this->field->turn)
     { // 돌 제거 선택
-#if player
+#if Player
         if (state != 2 && state != 3)
 #else
         if (state != 1 && state != 4)
