@@ -9,7 +9,7 @@ field class로 변경
 udp 수신 -> 턴 받음 구현 완료, 예외처리 필요
 
 돌 제거 함수
-bool Field::remove(int x, int y)
+bool Field::remove(int x, int y) 용
 구현, 미적용
 
 this->field->remove(x,y)
@@ -24,7 +24,16 @@ this->field->remove(x,y)
 
 
 todo:
+(수정 사항):
+돌 제거 함수 적용-->원래 있던 removeStone()함수로 적용 완료. board[][]->value로 돌 상태 파악,턴/돌 색 구분 코드 적용
 
-돌 제거 함수 적용
+승리 & 패배이벤트 구현 --> 승리조건은 1. 오목 완성 2. 상대방이 시민 돌 5개 파괴 
+            --> 1. check 함수 return true 조건 수정: 
+                본인 조력 마피아돌+본인 돌이 연달아 5개(state==1, ==4)이고 검사를 시작한 포인트 value가 1또는 4일 때만 true 반환-->본인 돌이 1인 사용자 승리 함수.
+            --> 2. removeStone에서 player_life<=0일 때 본인 패배 이벤트 발생(qDebug처리) 로 적용 완료. 
 
-승리 & 패배이벤트 구현
+오목판 바깥을 클릭할 시 강제종료되는 버그 수정 완료: 오목판 상단 label에 오류 메시지 표시
+
+
+
+
