@@ -62,6 +62,20 @@ void MainWindow::handlePoint(Point p)
 {
     qDebug()<<p.x;
     qDebug()<<p.y;
+
+    if (!this->field.turn){
+        if(this->field.place(p.x, p.y, this->field->team)){
+            if(this->field.check()){
+                //win
+            }
+            //보드 그리기
+        }else {
+            //err: 잘못된 위치
+        };
+        this->field.turn = true;
+    }else{
+        //err: 턴 오류
+    }
 }
 
 void MainWindow::drawBoard()

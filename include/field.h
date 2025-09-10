@@ -15,7 +15,7 @@ private:
     std::vector<std::vector<Node *>> field;
 
 public:
-    int x, y, color;
+    int x, y, team;
     bool turn;
     Field(void);
     bool place(int x, int y, int value);
