@@ -251,10 +251,22 @@ void MainWindow::on_radioButton_3_clicked()
     playchoice = 2; // 돌 회유
 }
 
+<<<<<<< Updated upstream
+=======
+void MainWindow::End_event(bool identify)
+{
+    if (identify)
+    {
+        this->field->turn = false;
+    }
+    else
+        this->field->turn = true; // 다시 시작.
+}
+
+>>>>>>> Stashed changes
 void MainWindow::on_pushButton_clicked()
 {
-    delete this->ui;
-    return;
+    QApplication::quit();
 }
 
 void MainWindow::on_pushButton_2_clicked()
