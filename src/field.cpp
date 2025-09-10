@@ -46,8 +46,8 @@ Field::Field(void)
         }
     }
 
-    this->turn = false;
-    this->team = 2;
+    this->turn = true;
+    this->team = 1;
 }
 
 bool Field::place(int x, int y, int value)
@@ -95,7 +95,7 @@ bool Field::check(void)
             count++;
         }
 
-        if (count >= LEN &&state==1&&state==4) //플레이어 1 승리조건
+        if (count >= LEN) //플레이어 1 승리조건
         {
             return true;
         }
