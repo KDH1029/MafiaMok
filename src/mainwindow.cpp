@@ -129,7 +129,7 @@ void MainWindow::placeStone(int row, int col, int value)
     {
         return;
     }
-    addBubble(QString("Placed stone at (%1, %2)").arg(cell.x()).arg(cell.y()), value == this->field->team);
+    addBubble(QString("Placed stone at (%1, %2)").arg(row).arg(col), value == this->field->team);
     QBrush brush = (value % 2) ? Qt::black : Qt::white;
     int stoneSize = cellSize - 4;
     int centerX = col * cellSize;
