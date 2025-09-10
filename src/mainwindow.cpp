@@ -254,10 +254,12 @@ void MainWindow::End_event(bool identify)
     }
     else
         this->field->turn = true; // 다시 시작.
+
     MainWindow();
 }
 
 void MainWindow::on_pushButton_clicked()
 {
     delete this->ui;
+    return;
 }
