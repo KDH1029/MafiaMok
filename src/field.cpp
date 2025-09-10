@@ -73,6 +73,30 @@ bool Field::place(int x, int y, int value)
     return false;
 }
 
+bool Field::seduce(int x, int y)
+{
+    if (x < 0 || x >= BOARD_SIZE || y < 0 || y >= BOARD_SIZE)
+    {
+        return false;
+    }
+    this->x = x;
+    this->y = y;
+    if (this->board[y][x]->value < 3)
+    {
+        if (this->board[y][x]->value == this->team)
+        {
+            this->board[y][x]->value = 5 - this->team;
+        }
+        else
+        {
+            this->board[y][x]->value = this->team + 2;
+        }
+        this->turn = !this->turn;
+        return true;
+    }
+    return false;
+}
+
 bool Field::remove(int x, int y)
 {
     if (x < 0 || x >= BOARD_SIZE || y < 0 || y >= BOARD_SIZE)

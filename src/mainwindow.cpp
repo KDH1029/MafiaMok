@@ -28,10 +28,10 @@ MainWindow::MainWindow(QWidget *parent)
     // QString filename = "/home/yu/MafiaMook/my_image2.jpg";
     // QImage image(filename);
 
-    playchoice = 0; // 처음엔 1번 플레이어 선택 상태
+    playchoice = 0;    // 처음엔 1번 플레이어 선택 상태
     player_life = 5;   // 목숨 5, 시민을 5번 없애면 패배
     seduce_ticket = 5; // 회유티켓. 일단 5로 하죠?
-    restart=false;
+    restart = false;
 
     this->field = new Field();
     this->udp = new Udp(this);
@@ -57,7 +57,8 @@ void MainWindow::handlePoint(Point p)
         switch (p.value)
         {
         case 0:
-            if(this->field->remove(p.x, p.y)){
+            if (this->field->remove(p.x, p.y))
+            {
                 removeStone(p.x, p.y);
                 this->field->turn = true;
             }
@@ -67,6 +68,12 @@ void MainWindow::handlePoint(Point p)
             placeStone(p.x, p.y, p.value);
             break;
         }
+    case -1:
+        if (this->field->seduce(p.x, p.y))
+        {
+            this->field->turn = true;
+        }
+        break;
     }
     else
     {
@@ -76,11 +83,13 @@ void MainWindow::handlePoint(Point p)
 
 void MainWindow::handleCmd(const QString &cmd)
 {
-    if(cmd == "WIN"){
+    if (cmd == "WIN")
+    {
         qDebug() << "You Lose!";
         this->field->turn = false;
     }
-    else if(cmd == "LOSE"){
+    else if (cmd == "LOSE")
+    {
         qDebug() << "You Win!";
         this->field->turn = false;
     }
@@ -129,7 +138,7 @@ void MainWindow::placeStone(int row, int col, int value)
     if (this->field->check())
     {
         this->field->turn = false;
-        if(value = this->field->team)
+        if (value = this->field->team)
             qDebug() << "Win!"; // 플레이어2 승리조건
         else
             qDebug() << "Lose!"; // 플레이어1 승리조건
@@ -196,11 +205,12 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
         }
         else
         { // 자신 돌 제거-->무조건 제거
-            if(this->field->remove(cell.x(), cell.y())){
+            if (this->field->remove(cell.x(), cell.y()))
+            {
                 this->udp->send(QString("%1,%2,0").arg(cell.x()).arg(cell.y()));
                 removeStone(cell.x(), cell.y());
                 ui->label->setText("Stone Distroied");
-                if (this->field->team==state)
+                if (this->field->team == state)
                 {
                     player_life--;
                     cout << "선량한 시민 돌이 사망했습니다..." << endl;
@@ -217,17 +227,19 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
 
     else if (playchoice == 2 && this->field->turn && seduce_ticket >= 1) // 회유 쿠폰 있을 시에만 가능
     {                                                                    // 돌 회유 선택
-        if (state != 2)
+        if (state == 3 - this->field->team)
         {
-            ui->label->setText("What Are You Doing?");
+            if (this->field->seduce(cell.x(), cell.y()))
+            {
+                this->udp->send(QString("%1,%2,-1").arg(cell.x()).arg(cell.y()));
+                ui->label->setText("Stone Rehabilitated");
+            }
+            seduce_ticket--; // 회유 쿠폰은 무조건 소비됨(횟수제한)
         }
         else
         {
-            ui->label->setText("Stone Rehabilitated");
-            this->field->board[cell.x()][cell.y()]->value = 3;
-            // 여기서 상대 PC에 전송: 회유 성공/실패는 표시하지 않음 시스템 상에서만 처리
+            ui->label->setText("What Are You Doing?");
         }
-        seduce_ticket--; // 회유 쿠폰은 무조건 소비됨(횟수제한)
     }
     else
     {
@@ -280,8 +292,8 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    if(restart){
+    if (restart)
+    {
         ;
     }
 }
-

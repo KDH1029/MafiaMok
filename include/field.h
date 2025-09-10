@@ -19,6 +19,7 @@ public:
     bool turn;
     Field(void);
     bool place(int x, int y, int value);
+    bool seduce(int x, int y);
     bool remove(int x, int y);
     bool check(void);
 };
