@@ -31,7 +31,6 @@ public:
     void removeStone(int row, int col);
     void placeStone(int row, int col, int value);
     void showMafiaEffect(int row, int col, int stoneSize);
-    void End_event(bool identify);
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
@@ -62,7 +61,6 @@ private:
     QPointF mapToCell(const QPointF& pos);
 
     int playchoice;
-    bool restart;
     int player_life;
     int seduce_ticket;
 };

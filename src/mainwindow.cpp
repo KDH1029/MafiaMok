@@ -31,7 +31,6 @@ MainWindow::MainWindow(QWidget *parent)
     playchoice = 0;    // 처음엔 1번 플레이어 선택 상태
     player_life = 5;   // 목숨 5, 시민을 5번 없애면 패배
     seduce_ticket = 5; // 회유티켓. 일단 5로 하죠?
-    restart = false;
 
     this->field = new Field();
     this->udp = new Udp(this);
@@ -284,17 +283,6 @@ void MainWindow::on_radioButton_3_clicked()
 {
     playchoice = 2; // 돌 회유
 }
-
-void MainWindow::End_event(bool identify)
-{
-    if (identify)
-    {
-        this->field->turn = false;
-    }
-    else
-        this->field->turn = true; // 다시 시작.
-}
-
 void MainWindow::on_pushButton_clicked()
 {
     QApplication::quit();
@@ -302,8 +290,19 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    if (restart)
-    {
-        ;
-    }
+    delete this->field;
+    this->field = new Field();
+
+    playchoice = -1;
+    player_life = 5;
+    seduce_ticket = 5;
+
+    scene->clear();
+    drawBoard();
+
+    for (int r = 0; r < 20; ++r)
+        for (int c = 0; c < 20; ++c)
+            stoneItems[r][c] = nullptr;
+
+    ui->label->setText("Game restarted!");
 }

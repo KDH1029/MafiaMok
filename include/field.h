@@ -6,7 +6,6 @@ class Node
 public:
     int x, y;
     int value;
-    QGraphicsEllipseItem *stone;
     Node *neighbor[8];
     Node(int x, int y);
 };
