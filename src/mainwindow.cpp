@@ -263,17 +263,6 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
 
 }
 
-void MainWindow::Mafia_act(int row, int col)
-{
-    this->udp->send(QString("%1,%2,0").arg(row).arg(col));
-    removeStone(row, col);
-    ui->label->setText("Stone Distroied");
-
-    int state = this->field->board[row][col]->value;
-    if (this->field->team == state) {
-        cout << "시민 돌이 마피아에게 사망했습니다..." << endl;
-    }
-}
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 { // 마우스 이벤트 캡쳐 함수

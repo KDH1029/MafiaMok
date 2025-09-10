@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>2283</width>
+    <width>2112</width>
     <height>1524</height>
    </rect>
   </property>
@@ -565,9 +565,9 @@ color:rgb(134, 94, 60);
     <property name="geometry">
      <rect>
       <x>1340</x>
-      <y>10</y>
+      <y>180</y>
       <width>701</width>
-      <height>1471</height>
+      <height>1301</height>
      </rect>
     </property>
     <property name="widgetResizable">
@@ -579,35 +579,9 @@ color:rgb(134, 94, 60);
        <x>0</x>
        <y>0</y>
        <width>699</width>
-       <height>1469</height>
+       <height>1299</height>
       </rect>
      </property>
-     <widget class="QPushButton" name="pushButton">
-      <property name="geometry">
-       <rect>
-        <x>424</x>
-        <y>20</y>
-        <width>251</width>
-        <height>121</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Exit</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pushButton_2">
-      <property name="geometry">
-       <rect>
-        <x>160</x>
-        <y>20</y>
-        <width>251</width>
-        <height>121</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>restart</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QRadioButton" name="radioButton">
@@ -661,6 +635,32 @@ color:rgb(134, 94, 60)</string>
      <string>seduce stone</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>1670</x>
+      <y>30</y>
+      <width>251</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Exit</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_2">
+    <property name="geometry">
+     <rect>
+      <x>1380</x>
+      <y>30</y>
+      <width>251</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>restart</string>
+    </property>
+   </widget>
    <zorder>line</zorder>
    <zorder>line_22</zorder>
    <zorder>line_7</zorder>
@@ -706,13 +706,15 @@ color:rgb(134, 94, 60)</string>
    <zorder>radioButton</zorder>
    <zorder>radioButton_2</zorder>
    <zorder>radioButton_3</zorder>
+   <zorder>pushButton</zorder>
+   <zorder>pushButton_2</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>2283</width>
+     <width>2112</width>
      <height>22</height>
     </rect>
    </property>
