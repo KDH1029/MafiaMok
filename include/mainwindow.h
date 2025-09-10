@@ -59,10 +59,6 @@ private:
     int player2;
     int player_life;
     int seduce_ticket;
-    void send(QString str);
-    void place(int x, int y);
-    void win(void);
-    void lose(void);
 };
 
 
