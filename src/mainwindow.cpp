@@ -63,7 +63,7 @@ void MainWindow::handlePoint(Point p)
     qDebug()<<p.y;
 
     if (!this->field.turn){
-        if(this->field.place(p.x, p.y, this->field->team)){
+        if(this->field.place(p.x, p.y, p.value)){
             if(this->field.check()){
                 //win
             }
