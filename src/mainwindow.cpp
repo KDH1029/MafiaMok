@@ -98,7 +98,7 @@ QGraphicsEllipseItem *stoneItems[20][20] = {nullptr}; // 최대 20x20 오목판 
 
 void MainWindow::placeStone(int row, int col, int player)
 {
-    if (row < 0 || row >= boardSize || col < 0 || col >= boardSize || this->board[row][col] != 0)
+    if (row < 0 || row >= boardSize || col < 0 || col > boardSize || this->board[row][col] != 0)
     {
         qDebug() << "Wrong Access!";
         return;
