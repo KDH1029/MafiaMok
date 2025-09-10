@@ -240,7 +240,7 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
     else if (playchoice == 1 && this->field->turn)
     { // 돌 제거 선택
 
-        if ((this->field->team==2&&state != 2 && state != 3)||(this->field->team==1&&state != 1 && state != 4))
+        if ((this->field->team == 2 && state != 2 && state != 3) || (this->field->team == 1 && state != 1 && state != 4))
         {
             ui->label->setText("Can't reduce it"); // 자신 돌이 아닌 것 제거 시도->예외처리
         }
@@ -349,6 +349,13 @@ void MainWindow::on_pushButton_2_clicked()
 
     ui->label->setText("Game restarted!");
     this->udp->send("RESET");
+
+    radioButton->setAutoExclusive(false); // 독점 해제
+    radioButton->setChecked(false);       // 체크 해제
+    radioButton_2->setAutoExclusive(false); // 독점 해제
+    radioButton_2->setChecked(false);       // 체크 해제
+    radioButton_3->setAutoExclusive(false); // 독점 해제
+    radioButton_3->setChecked(false);       // 체크 해제
 
 #if Player
     std::random_device rd;
