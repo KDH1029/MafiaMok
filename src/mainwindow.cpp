@@ -238,14 +238,13 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
             {
                 this->udp->send(QString("%1,%2,-1").arg(cell.x()).arg(cell.y()));
                 ui->label->setText("Stone Rehabilitated");
+                if (this->field->check())
+                {
+                    this->field->turn = false;
+                    qDebug() << "Win!"; // 플레이어2 승리조건
+                }
             }
             seduce_ticket--; // 회유 쿠폰은 무조건 소비됨(횟수제한)
-
-            if (this->field->check())
-            {
-                this->field->turn = false;
-                qDebug() << "Win!"; // 플레이어2 승리조건
-            }
         }
         else
         {
