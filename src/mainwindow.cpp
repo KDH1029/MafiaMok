@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->udp = new Udp(this);
     connect(this->udp, &Udp::received, this, &MainWindow::handlePoint);
 
+    this->stoneItems[20][20] = {nullptr}; // 최대 20x20 오목판 가정
     drawBoard();
 }
 
@@ -90,8 +91,6 @@ QPointF MainWindow::mapToCell(const QPointF &pos)
     return QPointF(row, col); // ok
 }
 
-QGraphicsEllipseItem *stoneItems[20][20] = {nullptr}; // 최대 20x20 오목판 가정
-
 void MainWindow::placeStone(int row, int col, int value)
 {
     if (this->field->place(row, col, value) == false)
@@ -115,7 +114,6 @@ void MainWindow::placeStone(int row, int col, int value)
     {
         qDebug() << "P1 win and P2 Lose!"; // 플레이어1 승리조건
         win_event = true;
-        End_event(win_event);
     }
 }
 
@@ -170,7 +168,7 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
 
     else if (playchoice == 1 && this->field->turn)
     { // 돌 제거 선택
-        if (state != 1 && state != 4)
+        if (state != 2 && state != 3)
         {
             ui->label->setText("Can't reduce it"); // 자신 돌이 아닌 것 제거 시도->예외처리
         }
@@ -191,7 +189,6 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
                 {
                     qDebug() << "You Lose!"; // 사용자 패배 조건(목숨이 깎이는 경우는 돌을 잘못 지우는 경우밖에 없으므로)
                     win_event = true;
-                    End_event(win_event);
                 }
             }
             this->udp->send(QString("%1,%2,0").arg(cell.x()).arg(cell.y()));
@@ -256,6 +253,21 @@ void MainWindow::End_event(bool identify)
         this->field->turn = true; // 다시 시작.
 
     MainWindow();
+    delete this->field;
+    this->field = new Field();
+
+    for (int row = 0; row < boardSize; row++)
+    {
+        for (int col = 0; col < boardSize; col++)
+        {
+            if (stoneItems[row][col] != nullptr)
+            {
+                scene->removeItem(stoneItems[row][col]);
+                delete stoneItems[row][col]; // 메모리 정리
+                stoneItems[row][col] = nullptr;
+            }
+        }
+    }
 }
 
 void MainWindow::on_pushButton_clicked()
