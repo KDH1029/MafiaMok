@@ -1,4 +1,4 @@
-#define Player true
+#define Player false
 
 #include <vector>
 #include <QGraphicsEllipseItem>

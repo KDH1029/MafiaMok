@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
     // player2 = 2;       // 상대 플레이어
     player_life = 5;   // 목숨 5, 시민을 5번 없애면 패배
     seduce_ticket = 5; // 회유티켓. 일단 5로 하죠?
+    restart=false;
 
     this->field = new Field();
     this->udp = new Udp(this);
@@ -114,7 +115,7 @@ void MainWindow::placeStone(int row, int col, int value)
     {
         qDebug() << "P1 win and P2 Lose!"; // 플레이어1 승리조건
         win_event = true;
-        End_event(win_event);
+        //End_event(win_event);
     }
 }
 
@@ -194,7 +195,7 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
                 {
                     qDebug() << "You Lose!"; // 사용자 패배 조건(목숨이 깎이는 경우는 돌을 잘못 지우는 경우밖에 없으므로)
                     win_event = true;
-                    End_event(win_event);
+                    //End_event(win_event);
                 }
             }
             this->udp->send(QString("%1,%2,0").arg(cell.x()).arg(cell.y()));
@@ -258,22 +259,8 @@ void MainWindow::End_event(bool identify)
     else
         this->field->turn = true; // 다시 시작.
 
-    MainWindow();
-    delete this->field;
-    this->field = new Field();
+    restart=true;
 
-    for (int row = 0; row < boardSize; row++)
-    {
-        for (int col = 0; col < boardSize; col++)
-        {
-            if (stoneItems[row][col] != nullptr)
-            {
-                scene->removeItem(stoneItems[row][col]);
-                delete stoneItems[row][col]; // 메모리 정리
-                stoneItems[row][col] = nullptr;
-            }
-        }
-    }
 }
 
 void MainWindow::on_pushButton_clicked()
@@ -281,3 +268,11 @@ void MainWindow::on_pushButton_clicked()
     delete this->ui;
     return;
 }
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    if(restart){
+        ;
+    }
+}
+

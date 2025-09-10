@@ -48,6 +48,8 @@ private slots:
 
     void on_pushButton_clicked();
 
+    void on_pushButton_2_clicked();
+
 private:
     Ui::MainWindow *ui;
     Field *field;
@@ -59,6 +61,7 @@ private:
     int playchoice;
     int player;
     bool win_event;
+    bool restart;
     //int player2;
     int player_life;
     int seduce_ticket;

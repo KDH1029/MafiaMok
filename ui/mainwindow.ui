@@ -595,6 +595,19 @@ color:rgb(134, 94, 60);
        <string>Exit</string>
       </property>
      </widget>
+     <widget class="QPushButton" name="pushButton_2">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>20</y>
+        <width>251</width>
+        <height>121</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>restart</string>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QRadioButton" name="radioButton">
