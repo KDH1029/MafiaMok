@@ -126,7 +126,6 @@ void MainWindow::handleCmd(const QString &cmd)
         delete this->field;
         this->field = new Field();
 
-        playchoice = -1;
         player_life = 5;
         seduce_ticket = 5;
 
@@ -137,7 +136,35 @@ void MainWindow::handleCmd(const QString &cmd)
             for (int c = 0; c < 20; ++c)
                 stoneItems[r][c] = nullptr;
 
-        ui->label->setText("Game restarted by opponent!");
+        ui->label->setText("Game restarted!");
+        this->udp->send("RESET");
+
+        ui->radioButton->setAutoExclusive(false);
+        ui->radioButton->setChecked(false);
+        ui->radioButton_2->setAutoExclusive(false);
+        ui->radioButton_2->setChecked(false);
+        ui->radioButton_3->setAutoExclusive(false);
+        ui->radioButton_3->setChecked(false);
+
+#if Player
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> dist(0, 1);
+
+        this->field->turn = dist(gen);
+        if (this->field->turn)
+        {
+            this->field->team = 1;
+            addBubble("You are the First Player", true);
+            this->udp->send("FIRST");
+        }
+        else
+        {
+            this->field->team = 2;
+            addBubble("You are the Second Player", true);
+            this->udp->send("SECOND");
+        }
+#endif
     }
     else if (cmd == "QUIT")
     {
