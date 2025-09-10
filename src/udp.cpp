@@ -1,4 +1,4 @@
-#define IP "127.0.0.1"
+#define IP "192.168.0.37"
 #define PORT 9999
 
 #include "udp.h"

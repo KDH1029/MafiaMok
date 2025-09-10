@@ -46,8 +46,8 @@ Field::Field(void)
         }
     }
 
-    this->turn = true;
-    this->team = 1;
+    this->turn = false;
+    this->team = 2;
 }
 
 bool Field::place(int x, int y, int value)

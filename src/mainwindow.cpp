@@ -62,10 +62,10 @@ void MainWindow::handlePoint(Point p)
             placeStone(p.x, p.y, p.value);
             break;
         }
-        else
-        {
-            // err: 턴 오류
-        }
+    }
+    else
+    {
+        // err: 턴 오류
     }
 }
 
@@ -165,7 +165,7 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
     { // 돌 놓기 선택
         ui->label->setText("You placed stone");
         placeStone(cell.x(), cell.y(), this->field->team); // player마다 다른 돌
-        this->udp->send(QString("%1,%2,%3").arg(row).arg(col).arg(value));
+        this->udp->send(QString("%1,%2,%3").arg(cell.x()).arg(cell.y()).arg(this->field->team));
     }
 
     else if (playchoice == 1 && this->field->turn)
@@ -193,7 +193,7 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
                     win_event = true;
                 }
             }
-            this->udp->send(QString("%1,%2,0").arg(row).arg(col));
+            this->udp->send(QString("%1,%2,0").arg(cell.x()).arg(cell.y()));
         }
     }
 
