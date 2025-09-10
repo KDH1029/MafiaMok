@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include <QUdpSocket>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QScrollBar>
@@ -22,11 +23,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->graphicsView->setScene(scene);
     ui->graphicsView->viewport()->installEventFilter(this);
 
-    this->field = new Field();
-    this->udp = new Udp(this);
-    
-    connect(this->udp, &Udp::received, this, &MainWindow::handlePoint);
-    
     // QString filename = "/home/yu/MafiaMook/my_image2.jpg";
     // QImage image(filename);
 
@@ -34,18 +30,10 @@ MainWindow::MainWindow(QWidget *parent)
     playchoice[1] = false;
     playchoice[2] = false;
     player=1; //이 컴퓨터는 1번 플레이어
+    player2=2; //상대 플레이어
+    player_life=5; //목숨 5, 시민을 5번 없애면 패배
+    seduce_ticket=5; //회유티켓. 일단 5로 하죠?
 
-    // if (image.isNull()) {
-    //     cout<< "이미지 로드 실패:" <<filename.toStdString()<<endl;
-    // } else {
-    //     ui->label_2->setPixmap(
-    //         QPixmap::fromImage(image).scaled(
-    //             ui->label_2->size(),
-    //             Qt::KeepAspectRatio,
-    //             Qt::SmoothTransformation
-    //             )
-    //         );
-    // }
 
     board.resize(boardSize);
     for(int i=0; i<boardSize; i++){
@@ -55,14 +43,12 @@ MainWindow::MainWindow(QWidget *parent)
         }
     }
 
+    udpSocket = new QUdpSocket(this);
+    udpSocket->bind(QHostAddress::Any, 9999);
+    connect(udpSocket, &QUdpSocket::readyRead, this, &MainWindow::get_udp);
+
     drawBoard();
 
-    //QWidget *container = new QWidget(this);
-    //container->setMinimumSize(1, 1);
-    //container->setFixedWidth(ui->scrollArea->width());
-    //ui->scrollArea->setWidget(container);
-    //ui->scrollArea->setWidgetResizable(false);
-    //ui->scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
 MainWindow::~MainWindow()
@@ -70,11 +56,22 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
-void MainWindow::handlePoint(Point p)
+void MainWindow::get_udp()
 {
-    //
+    while (udpSocket->hasPendingDatagrams())
+    {
+        QByteArray datagram;
+        datagram.resize(int(udpSocket->pendingDatagramSize()));
+        QHostAddress sender;
+        quint16 senderPort;
+
+        udpSocket->readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
+
+        QString message = QString::fromUtf8(datagram);
+        //addBubble(message, false);
+    }
 }
+
 
 void MainWindow::drawBoard() {
     scene->clear();
@@ -124,7 +121,7 @@ void MainWindow::removeStone(int row, int col) {
 
 void MainWindow::showMafiaEffect(int row, int col, int stoneSize) {
 
-
+    //이거는 시간 되면 넣어라. 간단한 효과인데 로그로 대체할 수 있다
     // 간단한 펄스 효과: QTimer로 크기 변화를 줌
     // QTimer* timer = new QTimer(this);
     // connect(timer, &QTimer::timeout, [effect]() {
@@ -142,45 +139,41 @@ void MainWindow::showMafiaEffect(int row, int col, int stoneSize) {
     // timer->start(50);  // 50ms마다
 }
 
-void MainWindow::onGraphicsViewClicked(QPointF pos) {
+void MainWindow::onGraphicsViewClicked(QPointF pos) { //여기서 발생한 모든 이벤트는 상대에게도 전송. 전송한 이벤트는 상대의 수신 함수에서 처리
     QPointF cell = mapToCell(pos); //clicked-->포인트 가져오기
-    if(playchoice[0]){
+    if(playchoice[0]){ //돌 놓기 선택
         placeStone(cell.x(), cell.y(), player); //player마다 다른 돌
     }
-    else if(playchoice[1]){
+
+    else if(playchoice[1]){//돌 제거 선택
         if(board[cell.x()][cell.y()]!= player){
-            ui->label->setText("Wrong Access");
+            ui->label->setText("Wrong Access"); //상대방 돌 제거 시도->예외처리
         }
-        else{
+        else{ //자신 돌 제거-->무조건 제거
             removeStone(cell.x(), cell.y());
             ui->label->setText("Stone Distroied");
+            if(mafia_bord[cell.x()][cell.y()]==player){mafia_bord[cell.x()][cell.y()]=0;} //플레이어쪽 잠입 맞으면 마피아 삭제
+            else{player_life--;addBubble("선량한 시민 돌이 사망했습니다...");}
         }
     }
-    else if(playchoice[2]){
-        if(board[cell.x()][cell.y()]!= player){
-            ui->label->setText("What are you doing?");
-        }
+
+    else if(playchoice[2]){ //돌 회유 선택
+        if(board[cell.x()][cell.y()]!= player||mafia_bord[cell.x()][cell.y()]!=player){ui->label->setText("What are you doing?");}
         else{
             ui->label->setText("Stone rehabilitated");
-            int stoneSize = cellSize - 4;
-            int centerX = cell.x() * cellSize;
-            int centerY = cell.y() * cellSize;
-
-            int x = centerX - stoneSize / 2;
-            int y = centerY - stoneSize / 2;
-
-            // 여기서 stone 대신 x, y, stoneSize를 이용해서 효과 적용
-            qreal stoneSizeF = static_cast<qreal>(stoneSize);
-            showMafiaEffect(x, y, stoneSize);
+            mafia_bord[cell.x()][cell.y()]=player2;
+            //여기서 상대 PC에 전송: 회유 성공/실패는 표시하지 않음 시스템 상에서만 처리
         }
+        seduce_ticket--; //회유 쿠폰은 무조건 소비됨(횟수제한)
     }
     else{
+        ui->label->setText("Choose One."); //선택이 안됐거나 예외상황일시.
         return;
     }
 
 }
 
-bool MainWindow::eventFilter(QObject *obj, QEvent *event) {
+bool MainWindow::eventFilter(QObject *obj, QEvent *event) { //마우스 이벤트 캡쳐 함수.
     if (obj == ui->graphicsView->viewport() && event->type() == QEvent::MouseButtonPress) {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
         QPointF scenePos = ui->graphicsView->mapToScene(mouseEvent->pos());
@@ -192,7 +185,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event) {
 
 void MainWindow::on_radioButton_clicked()
 {
-    playchoice[0]=true;
+    playchoice[0]=true; //돌 놓기
     playchoice[1]=false;
     playchoice[2]=false;
 }
@@ -201,7 +194,7 @@ void MainWindow::on_radioButton_clicked()
 void MainWindow::on_radioButton_2_clicked()
 {
     playchoice[0]=false;
-    playchoice[1]=true;
+    playchoice[1]=true; //돌 파괴
     playchoice[2]=false;
 }
 
@@ -210,10 +203,49 @@ void MainWindow::on_radioButton_3_clicked()
 {
     playchoice[0]=false;
     playchoice[1]=false;
-    playchoice[2]=true;
+    playchoice[2]=true; //돌 회유
 }
 
+void MainWindow::addBubble(const QString &message)
+    {
+    QLabel *label = new QLabel(message);
+    label->setWordWrap(true);
+    label->setMaximumWidth(ui->scrollArea->width() - 60);
+    label->adjustSize();
+    label->setStyleSheet( "background-color: #FFFFFF; border-radius: 10px; padding: 8px;");
+    label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
+    QHBoxLayout *layout = new QHBoxLayout;
+    layout->setContentsMargins(10, 5, 10, 5);
+    layout->addWidget(label);
+    layout->addStretch();
+
+
+    QWidget *bubbleWidget = new QWidget;
+    bubbleWidget->setLayout(layout);
+
+    QWidget *container = ui->scrollArea->widget();
+    bubbleWidget->setParent(container);
+    bubbleWidget->show();
+
+    int yOffset = 0;
+    for (QObject *child : container->children())
+    {
+    QWidget *w = qobject_cast<QWidget *>(child);
+    if (w && w != bubbleWidget)
+    {
+    yOffset += w->height() + 10;
+    }
+    }
+
+    int containerWidth = container->width();
+    int bubbleWidth = bubbleWidget->sizeHint().width();
+
+
+    bubbleWidget->move(0, yOffset);
+    container->resize(container->width(), yOffset + bubbleWidget->height() + 20);
+    ui->scrollArea->verticalScrollBar()->setValue(ui->scrollArea->verticalScrollBar()->maximum());
+    }
 
 
 

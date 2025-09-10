@@ -630,6 +630,29 @@ color:rgb(99, 69, 44);</string>
      <enum>Qt::Orientation::Horizontal</enum>
     </property>
    </widget>
+   <widget class="QScrollArea" name="scrollArea">
+    <property name="geometry">
+     <rect>
+      <x>1340</x>
+      <y>10</y>
+      <width>701</width>
+      <height>1471</height>
+     </rect>
+    </property>
+    <property name="widgetResizable">
+     <bool>true</bool>
+    </property>
+    <widget class="QWidget" name="scrollAreaWidgetContents">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>699</width>
+       <height>1469</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
    <zorder>line</zorder>
    <zorder>line_22</zorder>
    <zorder>line_7</zorder>
@@ -672,6 +695,7 @@ color:rgb(99, 69, 44);</string>
    <zorder>graphicsView</zorder>
    <zorder>groupBox</zorder>
    <zorder>label</zorder>
+   <zorder>scrollArea</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
