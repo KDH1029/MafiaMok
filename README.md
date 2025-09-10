@@ -21,3 +21,11 @@ endif
 field->check()
 
 오목 완성 여부 확인
+
+class Udp
+Qstring get_udp();
+
+QUdpSocket *udpSocket;
+
+void send(QString str);
+void place(int x, int y);
