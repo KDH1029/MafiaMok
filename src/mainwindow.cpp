@@ -155,9 +155,9 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
         { // 자신 돌 제거-->무조건 제거
             removeStone(cell.x(), cell.y());
             ui->label->setText("Stone Distroied");
-            if (mafia_bord[cell.x()][cell.y()] == player)
+            if (board[cell.x()][cell.y()] == 3)
             {
-                mafia_bord[cell.x()][cell.y()] = 0;
+                board[cell.x()][cell.y()] = 0;
             } // 플레이어쪽 잠입 맞으면 마피아 삭제
             else
             {
@@ -170,14 +170,14 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
 
     else if (playchoice==2)
     { // 돌 회유 선택
-        if (board[cell.x()][cell.y()] != player || mafia_bord[cell.x()][cell.y()] != player)
+        if (board[cell.x()][cell.y()] != 2)
         {
             ui->label->setText("What are you doing?");
         }
         else
         {
             ui->label->setText("Stone rehabilitated");
-            mafia_bord[cell.x()][cell.y()] = player2;
+            board[cell.x()][cell.y()] = 4;
             // 여기서 상대 PC에 전송: 회유 성공/실패는 표시하지 않음 시스템 상에서만 처리
         }
         seduce_ticket--; // 회유 쿠폰은 무조건 소비됨(횟수제한)
