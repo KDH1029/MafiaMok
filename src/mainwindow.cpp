@@ -147,11 +147,13 @@ void MainWindow::handleCmd(const QString &cmd)
     {
         this->field->turn = false;
         this->field->team = 2;
+        addBubble("You are the Second Player", false);
     }
     else if (cmd == "SECOND")
     {
         this->field->turn = true;
         this->field->team = 1;
+        addBubble("You are the First Player", false);
     }
 }
 
@@ -338,7 +340,6 @@ void MainWindow::on_pushButton_2_clicked()
     delete this->field;
     this->field = new Field();
 
-    playchoice = -1;
     player_life = 5;
     seduce_ticket = 5;
 
