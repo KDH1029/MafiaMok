@@ -37,6 +37,7 @@ public:
 
 private slots:
     void handlePoint(Point p);
+    void handleCmd(const QString &cmd);
     
     void onGraphicsViewClicked(QPointF pos);
 
@@ -59,7 +60,7 @@ private:
     int boardSize = 19;          // 오목판 19x19
     int cellSize = 50;    // 각 칸 크기
     QPointF mapToCell(const QPointF& pos);
-    
+
     int playchoice;
     bool restart;
     int player_life;
