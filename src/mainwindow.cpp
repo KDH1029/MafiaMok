@@ -137,7 +137,6 @@ void MainWindow::handleCmd(const QString &cmd)
                 stoneItems[r][c] = nullptr;
 
         ui->label->setText("Game restarted!");
-        this->udp->send("RESET");
 
         ui->radioButton->setAutoExclusive(false);
         ui->radioButton->setChecked(false);
