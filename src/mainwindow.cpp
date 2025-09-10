@@ -26,9 +26,8 @@ MainWindow::MainWindow(QWidget *parent)
     // QString filename = "/home/yu/MafiaMook/my_image2.jpg";
     // QImage image(filename);
 
-    playchoice[0] = false; // 처음엔 1번 플레이어 선택 상태
-    playchoice[1] = false;
-    playchoice[2] = false;
+    playchoice = -1; // 처음엔 1번 플레이어 선택 상태
+
     player = 1;        // 이 컴퓨터는 1번 플레이어
     player2 = 2;       // 상대 플레이어
     player_life = 5;   // 목숨 5, 시민을 5번 없애면 패배
@@ -141,12 +140,12 @@ void MainWindow::showMafiaEffect(int row, int col, int stoneSize)
 void MainWindow::onGraphicsViewClicked(QPointF pos)
 {                                  // 여기서 발생한 모든 이벤트는 상대에게도 전송. 전송한 이벤트는 상대의 수신 함수에서 처리
     QPointF cell = mapToCell(pos); // clicked-->포인트 가져오기
-    if (playchoice[0])
+    if (playchoice==0)
     {                                           // 돌 놓기 선택
         placeStone(cell.x(), cell.y(), player); // player마다 다른 돌
     }
 
-    else if (playchoice[1])
+    else if (playchoice==1)
     { // 돌 제거 선택
         if (board[cell.x()][cell.y()] != player)
         {
@@ -169,7 +168,7 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
         }
     }
 
-    else if (playchoice[2])
+    else if (playchoice==2)
     { // 돌 회유 선택
         if (board[cell.x()][cell.y()] != player || mafia_bord[cell.x()][cell.y()] != player)
         {
@@ -205,21 +204,16 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 
 void MainWindow::on_radioButton_clicked()
 {
-    playchoice[0] = true; // 돌 놓기
-    playchoice[1] = false;
-    playchoice[2] = false;
+    playchoice = 0; // 돌 놓기
+
 }
 
 void MainWindow::on_radioButton_2_clicked()
 {
-    playchoice[0] = false;
-    playchoice[1] = true; // 돌 파괴
-    playchoice[2] = false;
+    playchoice = 1; // 돌 파괴
 }
 
 void MainWindow::on_radioButton_3_clicked()
 {
-    playchoice[0] = false;
-    playchoice[1] = false;
-    playchoice[2] = true; // 돌 회유
+    playchoice = 2; // 돌 회유
 }

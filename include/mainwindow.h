@@ -54,7 +54,7 @@ private:
     int boardSize = 19;          // 오목판 19x19
     int cellSize = 60;    // 각 칸 크기
     QPointF mapToCell(const QPointF& pos);
-    bool playchoice[3];
+    bool playchoice;
     int player;
     int player2;
     int player_life;
