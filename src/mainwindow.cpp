@@ -13,7 +13,6 @@
 #include <QTimer>
 #include <QDebug>
 
-
 using namespace std;
 
 MainWindow::MainWindow(QWidget *parent)
@@ -28,9 +27,9 @@ MainWindow::MainWindow(QWidget *parent)
     // QImage image(filename);
 
     playchoice = 0; // 처음엔 1번 플레이어 선택 상태
-    win_event=false;
-    //player = 1;        // 이 컴퓨터는 1번 플레이어
-    //player2 = 2;       // 상대 플레이어
+    win_event = false;
+    // player = 1;        // 이 컴퓨터는 1번 플레이어
+    // player2 = 2;       // 상대 플레이어
     player_life = 5;   // 목숨 5, 시민을 5번 없애면 패배
     seduce_ticket = 5; // 회유티켓. 일단 5로 하죠?
 
@@ -53,11 +52,20 @@ void MainWindow::handlePoint(Point p)
 
     if (!this->field->turn)
     {
-        placeStone(p.x, p.y, p.value);
-    }
-    else
-    {
-        // err: 턴 오류
+        switch (p.value)
+        {
+        case 0:
+            removeStone(p.x, p.y);
+            break;
+        case 1:
+        case 2:
+            placeStone(p.x, p.y, p.value);
+            break;
+        }
+        else
+        {
+            // err: 턴 오류
+        }
     }
 }
 
@@ -70,10 +78,9 @@ void MainWindow::drawBoard()
         scene->addLine(i * cellSize, 0, i * cellSize, (boardSize - 1) * cellSize); // 세로
     }
     scene->addLine(-1, -1 * cellSize, (boardSize - 1) * cellSize, -1 * cellSize);
-    scene->addLine(19, 19 * cellSize, (boardSize - 1) * cellSize, 19 * cellSize);// 가로 //격자를 살짝 내리는 방향으로 .
-    scene->addLine(19 * cellSize, 0, 19* cellSize, (boardSize - 1) * cellSize);
-    scene->addLine(-1 * cellSize, 0, -1* cellSize, (boardSize - 1) * cellSize);
-
+    scene->addLine(19, 19 * cellSize, (boardSize - 1) * cellSize, 19 * cellSize); // 가로 //격자를 살짝 내리는 방향으로 .
+    scene->addLine(19 * cellSize, 0, 19 * cellSize, (boardSize - 1) * cellSize);
+    scene->addLine(-1 * cellSize, 0, -1 * cellSize, (boardSize - 1) * cellSize);
 }
 
 QPointF MainWindow::mapToCell(const QPointF &pos)
@@ -107,11 +114,9 @@ void MainWindow::placeStone(int row, int col, int value)
     if (this->field->check())
     {
 
-        qDebug() << "P1 win and P2 Lose!"; //플레이어1 승리조건
-        win_event=true;
+        qDebug() << "P1 win and P2 Lose!"; // 플레이어1 승리조건
+        win_event = true;
     }
-
-    this->udp->send(QString("%1,%2,%3").arg(row).arg(col).arg(value));
 }
 
 // 돌 제거 함수
@@ -150,17 +155,22 @@ void MainWindow::showMafiaEffect(int row, int col, int stoneSize)
 void MainWindow::onGraphicsViewClicked(QPointF pos)
 {                                  // 여기서 발생한 모든 이벤트는 상대에게도 전송. 전송한 이벤트는 상대의 수신 함수에서 처리
     QPointF cell = mapToCell(pos); // clicked-->포인트 가져오기
-    if(cell.x()>boardSize||cell.x()<0||cell.y()>boardSize||cell.y()<0){ui->label->setText("You're Out!"); return;} //보드판 외 다른 곳 클릭, 예외처리
+    if (cell.x() > boardSize || cell.x() < 0 || cell.y() > boardSize || cell.y() < 0)
+    {
+        ui->label->setText("You're Out!");
+        return;
+    } // 보드판 외 다른 곳 클릭, 예외처리
     int state = this->field->board[cell.y()][cell.x()]->value;
-    if (playchoice == 0&&this->field->turn)
-    {                                           // 돌 놓기 선택
+    if (playchoice == 0 && this->field->turn)
+    { // 돌 놓기 선택
         ui->label->setText("You placed stone");
         placeStone(cell.x(), cell.y(), this->field->team); // player마다 다른 돌
+        this->udp->send(QString("%1,%2,%3").arg(row).arg(col).arg(value));
     }
 
-    else if (playchoice == 1&&this->field->turn)
+    else if (playchoice == 1 && this->field->turn)
     { // 돌 제거 선택
-        if (state != 1 &&state != 4)
+        if (state != 1 && state != 4)
         {
             ui->label->setText("Can't reduce it"); // 자신 돌이 아닌 것 제거 시도->예외처리
         }
@@ -177,17 +187,18 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
                 player_life--;
                 cout << "선량한 시민 돌이 사망했습니다..." << endl;
                 // addBubble("선량한 시민 돌이 사망했습니다...");
-                if(player_life<=0){
-                    qDebug() << "You Lose!"; //사용자 패배 조건(목숨이 깎이는 경우는 돌을 잘못 지우는 경우밖에 없으므로)
-                    win_event=true;
-
+                if (player_life <= 0)
+                {
+                    qDebug() << "You Lose!"; // 사용자 패배 조건(목숨이 깎이는 경우는 돌을 잘못 지우는 경우밖에 없으므로)
+                    win_event = true;
                 }
             }
+            this->udp->send(QString("%1,%2,0").arg(row).arg(col));
         }
     }
 
-    else if (playchoice == 2&&this->field->turn&&seduce_ticket>=1) //회유 쿠폰 있을 시에만 가능
-    { // 돌 회유 선택
+    else if (playchoice == 2 && this->field->turn && seduce_ticket >= 1) // 회유 쿠폰 있을 시에만 가능
+    {                                                                    // 돌 회유 선택
         if (state != 2)
         {
             ui->label->setText("What Are You Doing?");
@@ -195,7 +206,7 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
         else
         {
             ui->label->setText("Stone Rehabilitated");
-            this->field->board[cell.x()][cell.y()]->value=4;
+            this->field->board[cell.x()][cell.y()]->value = 4;
             // 여기서 상대 PC에 전송: 회유 성공/실패는 표시하지 않음 시스템 상에서만 처리
         }
         seduce_ticket--; // 회유 쿠폰은 무조건 소비됨(횟수제한)
@@ -205,9 +216,6 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
         ui->label->setText("Wrong Access"); // 선택이 안됐거나 예외상황일시.
         return;
     }
-
-
-
 }
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
@@ -221,7 +229,6 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     }
     return QMainWindow::eventFilter(obj, event);
 }
-
 
 void MainWindow::on_radioButton_clicked()
 {
@@ -238,11 +245,14 @@ void MainWindow::on_radioButton_3_clicked()
     playchoice = 2; // 돌 회유
 }
 
-void MainWindow::End_event(bool identify){
-    if(identify){
-        this->field->turn=false;
+void MainWindow::End_event(bool identify)
+{
+    if (identify)
+    {
+        this->field->turn = false;
     }
-    else this->field->turn=true; //다시 시작.
+    else
+        this->field->turn = true; // 다시 시작.
     MainWindow();
 }
 
@@ -250,4 +260,3 @@ void MainWindow::on_pushButton_clicked()
 {
     delete this->ui;
 }
-
