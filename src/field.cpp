@@ -2,7 +2,6 @@
 #define LEN 5
 
 #include "field.h"
-#include <iostream>
 
 Node::Node(int x, int y)
 {
@@ -73,13 +72,9 @@ bool Field::remove(int x, int y)
     {
         return false;
     }
-    if (this->board[y][x]->value != 0)
-    {
-        this->board[y][x]->value = 0;
-        this->turn = !this->turn;
-        return true;
-    }
-    return false;
+    this->board[y][x]->value = 0;
+    this->turn = !this->turn;
+    return true;
 }
 
 bool Field::check(void)
@@ -101,8 +96,6 @@ bool Field::check(void)
 
         if (count >= LEN)
         {
-            std::cout << "win" << std::endl
-                      << std::endl;
             return true;
         }
     }

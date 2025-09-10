@@ -1,31 +1,20 @@
-# MafiaMook
+# MafiaMok
 
-field
+수정 사항:
 
-field->place(int x, int y, int value)
+field class로 변경
 
-돌 놓기
+돌 추가 -> 턴 넘김 구현 완료
 
-if field[y][x] value != 0:
+udp 수신 -> 턴 받음 구현 완료, 예외처리 필요
 
-    field[y][x]에 value저장
+돌 제거 함수
+bool Field::remove(int x, int y)
+구현, 미적용
 
-    return true
+this->field->remove(x,y)
 
-else
+돌을 지울 수 있는 상황인지 확인 필요
+(턴, 돌 색)
 
-    return false
-
-endif
-
-field->check()
-
-오목 완성 여부 확인
-
-class Udp
-Qstring get_udp();
-
-QUdpSocket *udpSocket;
-
-void send(QString str);
-void place(int x, int y);
+돌 놓으면서 승리조건 확인

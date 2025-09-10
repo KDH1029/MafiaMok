@@ -58,7 +58,6 @@ void MainWindow::handlePoint(Point p)
     {
         // err: 턴 오류
     }
-    qDebug() << "handlePoint done";
 }
 
 void MainWindow::drawBoard()
@@ -104,8 +103,10 @@ void MainWindow::placeStone(int row, int col, int value)
     QGraphicsEllipseItem *stone = scene->addEllipse(x, y, stoneSize, stoneSize, QPen(), brush);
     stoneItems[row][col] = stone; // 저장
 
-    this->udp->send("1,1,1");
-    qDebug() << "handlePoint";
+    if (this->field->check())
+    {
+        qDebug() << "Game Over!";
+    }
 }
 
 // 돌 제거 함수
