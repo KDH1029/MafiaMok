@@ -1,23 +1,28 @@
+#include <QObject>
 #include <QUdpSocket>
 
-struct Point {
+struct Point
+{
     int x;
     int y;
+    int value;
 };
 
-class UDP
+class Udp : public QObject
 {
+    Q_OBJECT
 public:
-    Socket *socket;
-    UDP();
-    ~UDP();
+    explicit Udp(QObject *parent = nullptr);
+    ~Udp();
+
+    void send(const QString &str);
+
+signals:
+    void received(Point p);
 
 private slots:
-    Point get_udp();
+    void get_udp();
 
 private:
-    QUdpSocket *udpSocket;
-
-    void send(QString str);
-}
-
+    QUdpSocket *socket;
+};

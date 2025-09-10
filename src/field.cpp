@@ -46,14 +46,6 @@ Field::Field(void)
             }
         }
     }
-
-    this->place(0, 0, 1);
-    this->place(1, 0, 1);
-    this->place(2, 0, 1);
-    this->place(3, 0, 1);
-    this->place(4, 0, 1);
-
-    this->check();
 }
 
 bool Field::place(int x, int y, int value)
@@ -106,6 +98,4 @@ bool Field::check(void)
         }
     }
     return false;
-    std::cout << "lose" << std::endl
-              << std::endl;
 }

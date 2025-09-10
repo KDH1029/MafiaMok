@@ -40,11 +40,13 @@ set(SOURCES
 src/main.cpp
 src/mainwindow.cpp
 src/field.cpp
+src/udp.cpp
 )
 # Header files
 set(HEADERS
 include/mainwindow.h
 include/field.h
+include/udp.h
 )
 # UI files
 set(UI_FILES
