@@ -117,7 +117,7 @@ void MainWindow::placeStone(int row, int col, int value)
     {
         qDebug() << "P1 win and P2 Lose!"; // 플레이어1 승리조건
         win_event = true;
-        //End_event(win_event);
+        End_event(win_event);
     }
 }
 
@@ -197,7 +197,7 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
                 {
                     qDebug() << "You Lose!"; // 사용자 패배 조건(목숨이 깎이는 경우는 돌을 잘못 지우는 경우밖에 없으므로)
                     win_event = true;
-                    //End_event(win_event);
+                    End_event(win_event);
                 }
             }
             this->udp->send(QString("%1,%2,0").arg(cell.x()).arg(cell.y()));
@@ -213,7 +213,7 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
         else
         {
             ui->label->setText("Stone Rehabilitated");
-            this->field->board[cell.x()][cell.y()]->value = 4;
+            this->field->board[cell.x()][cell.y()]->value = 3;
             // 여기서 상대 PC에 전송: 회유 성공/실패는 표시하지 않음 시스템 상에서만 처리
         }
         seduce_ticket--; // 회유 쿠폰은 무조건 소비됨(횟수제한)
