@@ -67,13 +67,13 @@ void MainWindow::handlePoint(Point p)
         case 2:
             placeStone(p.x, p.y, p.value);
             break;
+        case -1:
+            if (this->field->seduce(p.x, p.y))
+            {
+                this->field->turn = true;
+            }
+            break;
         }
-    case 5:
-        if (this->field->seduce(p.x, p.y))
-        {
-            this->field->turn = true;
-        }
-        break;
     }
     else
     {
@@ -231,7 +231,7 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
         {
             if (this->field->seduce(cell.x(), cell.y()))
             {
-                this->udp->send(QString("%1,%2,5").arg(cell.x()).arg(cell.y()));
+                this->udp->send(QString("%1,%2,-1").arg(cell.x()).arg(cell.y()));
                 ui->label->setText("Stone Rehabilitated");
             }
             seduce_ticket--; // 회유 쿠폰은 무조건 소비됨(횟수제한)
