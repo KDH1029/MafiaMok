@@ -33,13 +33,13 @@ MainWindow::MainWindow(QWidget *parent)
     player_life = 5;   // 목숨 5, 시민을 5번 없애면 패배
     seduce_ticket = 5; // 회유티켓. 일단 5로 하죠?
 
-    board.resize(boardSize);
+    this->board.resize(boardSize);
     for (int i = 0; i < boardSize; i++)
     {
-        board[i].resize(boardSize);
+        this->board[i].resize(boardSize);
         for (int j = 0; j < boardSize; j++)
         {
-            board[i][j] = 0; // 빈칸 초기화
+            this->board[i][j] = 0; // 빈칸 초기화
         }
     }
 
@@ -98,13 +98,13 @@ QGraphicsEllipseItem *stoneItems[20][20] = {nullptr}; // 최대 20x20 오목판 
 
 void MainWindow::placeStone(int row, int col, int player)
 {
-    if (row < 0 || row >= boardSize || col < 0 || col >= boardSize || board[row][col] != 0)
+    if (row < 0 || row >= boardSize || col < 0 || col >= boardSize || this->board[row][col] != 0)
     {
         qDebug() << "Wrong Access!";
         return;
     }
 
-    board[row][col] = player;
+    this->board[row][col] = player;
 
     QBrush brush = (player == 1) ? Qt::black : Qt::white;
     int stoneSize = cellSize - 4;
@@ -126,7 +126,7 @@ void MainWindow::removeStone(int row, int col)
         scene->removeItem(stoneItems[row][col]);
         delete stoneItems[row][col]; // 메모리 정리
         stoneItems[row][col] = nullptr;
-        board[row][col] = 0;
+        this->board[row][col] = 0;
     }
 }
 
@@ -161,7 +161,7 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
 
     else if (playchoice==1)
     { // 돌 제거 선택
-        if (board[cell.x()][cell.y()] != player)
+        if (this->board[cell.x()][cell.y()] != player)
         {
             ui->label->setText("Wrong Access"); // 상대방 돌 제거 시도->예외처리
         }
@@ -169,9 +169,9 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
         { // 자신 돌 제거-->무조건 제거
             removeStone(cell.x(), cell.y());
             ui->label->setText("Stone Distroied");
-            if (board[cell.x()][cell.y()] == 3)
+            if (this->board[cell.x()][cell.y()] == 3)
             {
-                board[cell.x()][cell.y()] = 0;
+                this->board[cell.x()][cell.y()] = 0;
             } // 플레이어쪽 잠입 맞으면 마피아 삭제
             else
             {
@@ -184,14 +184,14 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
 
     else if (playchoice==2)
     { // 돌 회유 선택
-        if (board[cell.x()][cell.y()] != 2)
+        if (this->board[cell.x()][cell.y()] != 2)
         {
             ui->label->setText("What are you doing?");
         }
         else
         {
             ui->label->setText("Stone rehabilitated");
-            board[cell.x()][cell.y()] = 4;
+            this->board[cell.x()][cell.y()] = 4;
             // 여기서 상대 PC에 전송: 회유 성공/실패는 표시하지 않음 시스템 상에서만 처리
         }
         seduce_ticket--; // 회유 쿠폰은 무조건 소비됨(횟수제한)
