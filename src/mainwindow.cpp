@@ -15,6 +15,10 @@
 #include <QTimer>
 #include <QDebug>
 
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QScrollBar>
+
 using namespace std;
 
 MainWindow::MainWindow(QWidget *parent)
@@ -36,6 +40,13 @@ MainWindow::MainWindow(QWidget *parent)
     this->udp = new Udp(this);
     connect(this->udp, &Udp::pointReceived, this, &MainWindow::handlePoint);
     connect(this->udp, &Udp::cmdReceived, this, &MainWindow::handleCmd);
+
+    QWidget *container = new QWidget(this);
+    container->setMinimumSize(1, 1);
+    container->setFixedWidth(ui->scrollArea->width());
+    ui->scrollArea->setWidget(container);
+    ui->scrollArea->setWidgetResizable(false);
+    ui->scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     this->stoneItems[20][20] = {nullptr}; // 최대 20x20 오목판 가정
     drawBoard();
