@@ -70,7 +70,6 @@ void MainWindow::handlePoint(Point p)
         case 1:
         case 2:
             placeStone(p.x, p.y, p.value);
-            addBubble(QString("Placed stone at (%1, %2)").arg(p.x).arg(p.y), false);
             break;
         case -1:
             if (this->field->seduce(p.x, p.y))
