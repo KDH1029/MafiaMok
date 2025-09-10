@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     playchoice = 0;    // 처음엔 1번 플레이어 선택 상태
     player_life = 5;   // 목숨 5, 시민을 5번 없애면 패배
-    seduce_ticket = 5; // 회유티켓. 일단 5로 하죠?
+    seduce_ticket = 5; // 회유티켓 5
 
     this->field = new Field();
     this->udp = new Udp(this);
