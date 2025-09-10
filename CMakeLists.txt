@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(MafiaMook VERSION 1.0 LANGUAGES CXX)
+project(MafiaMok VERSION 1.0 LANGUAGES CXX)
 
 # C++ configuring
 set(CMAKE_CXX_STANDARD 11)
