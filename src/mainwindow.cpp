@@ -11,6 +11,7 @@
 #include <QGraphicsItemAnimation>
 #include <QTimeLine>
 #include <QTimer>
+#include <QDebug>
 
 using namespace std;
 
@@ -48,6 +49,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this->udp, &Udp::received, this, &MainWindow::handlePoint);
 
     drawBoard();
+
+    udp->send("1,1,1");
 }
 
 MainWindow::~MainWindow()
@@ -57,7 +60,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::handlePoint(Point p)
 {
-    //
+    qDebug()<<p.x;
+    qDebug()<<p.y;
 }
 
 void MainWindow::drawBoard()
@@ -159,7 +163,7 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
             else
             {
                 player_life--;
-                addBubble("선량한 시민 돌이 사망했습니다...");
+                //addBubble("선량한 시민 돌이 사망했습니다...");
             }
         }
     }
