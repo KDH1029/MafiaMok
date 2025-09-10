@@ -362,13 +362,13 @@ void MainWindow::on_pushButton_2_clicked()
     {
         this->field->team = 1;
         addBubble("You are the First Player", true);
-        this->udp->send("SECOND");
+        this->udp->send("FIRST");
     }
     else
     {
         this->field->team = 2;
         addBubble("You are the Second Player", true);
-        this->udp->send("FIRST");
+        this->udp->send("SECOND");
     }
 #endif
 }
