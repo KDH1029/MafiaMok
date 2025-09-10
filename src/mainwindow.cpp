@@ -116,7 +116,7 @@ void MainWindow::removeStone(int row, int col)
         scene->removeItem(stoneItems[row][col]);
         delete stoneItems[row][col]; // 메모리 정리
         stoneItems[row][col] = nullptr;
-        //this->board[row][col] = 0;
+        this->field->remove(row, col);
     }
 }
 

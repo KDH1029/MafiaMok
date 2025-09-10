@@ -67,6 +67,21 @@ bool Field::place(int x, int y, int value)
     return false;
 }
 
+bool Field::remove(int x, int y)
+{
+    if (x < 0 || x >= BOARD_SIZE || y < 0 || y >= BOARD_SIZE)
+    {
+        return false;
+    }
+    if (this->board[y][x]->value != 0)
+    {
+        this->board[y][x]->value = 0;
+        this->turn = !this->turn;
+        return true;
+    }
+    return false;
+}
+
 bool Field::check(void)
 {
     for (int i = 0; i < 4; i++)
