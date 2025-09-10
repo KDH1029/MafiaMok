@@ -56,7 +56,10 @@ void MainWindow::handlePoint(Point p)
         switch (p.value)
         {
         case 0:
-            removeStone(p.x, p.y);
+            if(this->field->remove(p.x, p.y)){
+                removeStone(p.x, p.y);
+                this->field->turn = true;
+            }
             break;
         case 1:
         case 2:
