@@ -1,3 +1,5 @@
+#define player true
+
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include <QHBoxLayout>
@@ -169,7 +171,11 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
 
     else if (playchoice == 1 && this->field->turn)
     { // 돌 제거 선택
+#if player
         if (state != 2 && state != 3)
+#else
+        if (state != 1 && state != 4)
+#endif
         {
             ui->label->setText("Can't reduce it"); // 자신 돌이 아닌 것 제거 시도->예외처리
         }

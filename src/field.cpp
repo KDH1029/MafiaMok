@@ -45,9 +45,13 @@ Field::Field(void)
             }
         }
     }
-
+#if player
+    this->turn = false;
+    this->team = 2;
+#else
     this->turn = true;
     this->team = 1;
+#endif
 }
 
 bool Field::place(int x, int y, int value)
