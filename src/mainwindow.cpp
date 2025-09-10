@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
     // QString filename = "/home/yu/MafiaMook/my_image2.jpg";
     // QImage image(filename);
 
-    playchoice = -1; // 처음엔 1번 플레이어 선택 상태
+    playchoice = 0; // 처음엔 1번 플레이어 선택 상태
 
     player = 1;        // 이 컴퓨터는 1번 플레이어
     player2 = 2;       // 상대 플레이어
@@ -92,6 +92,11 @@ void MainWindow::drawBoard()
         scene->addLine(0, i * cellSize, (boardSize - 1) * cellSize, i * cellSize); // 가로 //격자를 살짝 내리는 방향으로 .
         scene->addLine(i * cellSize, 0, i * cellSize, (boardSize - 1) * cellSize); // 세로
     }
+    scene->addLine(-1, -1 * cellSize, (boardSize - 1) * cellSize, -1 * cellSize);
+    scene->addLine(19, 19 * cellSize, (boardSize - 1) * cellSize, 19 * cellSize);// 가로 //격자를 살짝 내리는 방향으로 .
+    scene->addLine(19 * cellSize, 0, 19* cellSize, (boardSize - 1) * cellSize);
+    scene->addLine(-1 * cellSize, 0, -1* cellSize, (boardSize - 1) * cellSize);
+
 }
 
 QPointF MainWindow::mapToCell(const QPointF &pos)
