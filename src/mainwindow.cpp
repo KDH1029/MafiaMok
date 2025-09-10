@@ -71,6 +71,11 @@ void MainWindow::handlePoint(Point p)
             if (this->field->seduce(p.x, p.y))
             {
                 this->field->turn = true;
+                if (this->field->check())
+                {
+                    this->field->turn = false;
+                    qDebug() << "Lose!"; // 플레이어1 승리조건
+                }
             }
             break;
         }
@@ -138,7 +143,7 @@ void MainWindow::placeStone(int row, int col, int value)
     if (this->field->check())
     {
         this->field->turn = false;
-        if (value = this->field->team)
+        if (value == this->field->team || value == this->field->team + 2)
             qDebug() << "Win!"; // 플레이어2 승리조건
         else
             qDebug() << "Lose!"; // 플레이어1 승리조건
@@ -235,6 +240,12 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
                 ui->label->setText("Stone Rehabilitated");
             }
             seduce_ticket--; // 회유 쿠폰은 무조건 소비됨(횟수제한)
+
+            if (this->field->check())
+            {
+                this->field->turn = false;
+                qDebug() << "Win!"; // 플레이어2 승리조건
+            }
         }
         else
         {
