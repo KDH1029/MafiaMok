@@ -13,14 +13,14 @@ Node::Node(int x, int y)
 
 Field::Field(void)
 {
-    this->field.resize(BOARD_SIZE);
+    this->board.resize(BOARD_SIZE);
 
     for (int y = 0; y < BOARD_SIZE; ++y)
     {
-        this->field[y].resize(BOARD_SIZE);
+        this->board[y].resize(BOARD_SIZE);
         for (int x = 0; x < BOARD_SIZE; ++x)
         {
-            this->field[y][x] = new Node(x, y);
+            this->board[y][x] = new Node(x, y);
         }
     }
 
@@ -37,11 +37,11 @@ Field::Field(void)
                 int ny = y + dy[dir];
                 if (nx >= 0 && nx < BOARD_SIZE && ny >= 0 && ny < BOARD_SIZE)
                 {
-                    this->field[y][x]->neighbor[dir] = this->field[ny][nx];
+                    this->board[y][x]->neighbor[dir] = this->board[ny][nx];
                 }
                 else
                 {
-                    this->field[y][x]->neighbor[dir] = nullptr;
+                    this->board[y][x]->neighbor[dir] = nullptr;
                 }
             }
         }
@@ -52,15 +52,15 @@ bool Field::place(int x, int y, int value)
 {
     this->x = x;
     this->y = y;
-    if (this->field[y][x]->value == 0)
+    if (this->board[y][x]->value == 0)
     {
-        this->field[y][x]->value = value;
+        this->board[y][x]->value = value;
 
         for (int i = 0; i < BOARD_SIZE; i++)
         {
             for (int j = 0; j < BOARD_SIZE; j++)
             {
-                std::cout << this->field[i][j]->value;
+                std::cout << this->board[i][j]->value;
             }
             std::cout << std::endl;
         }
@@ -77,7 +77,7 @@ bool Field::check(void)
 {
     for (int i = 0; i < 4; i++)
     {
-        Node *node = this->field[y][x];
+        Node *node = this->board[y][x];
         int state = node->value;
         int count = 1;
         while (node->neighbor[i] && node->neighbor[i]->value == state)
