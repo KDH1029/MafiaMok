@@ -79,10 +79,6 @@ void MainWindow::handlePoint(Point p)
             break;
         }
     }
-    else
-    {
-        // err: 턴 오류
-    }
 }
 
 void MainWindow::handleCmd(const QString &cmd)
