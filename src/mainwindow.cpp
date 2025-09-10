@@ -69,7 +69,7 @@ void MainWindow::drawBoard()
     scene->clear();
     for (int i = 0; i < boardSize; i++)
     {
-        scene->addLine(0, i * cellSize, (boardSize - 1) * cellSize, i * cellSize); // 가로
+        scene->addLine(0, i* cellSize, (boardSize - 1) * cellSize, i * cellSize); // 가로 //격자를 살짝 내리는 방향으로 .
         scene->addLine(i * cellSize, 0, i * cellSize, (boardSize - 1) * cellSize); // 세로
     }
 }
@@ -163,6 +163,7 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
             else
             {
                 player_life--;
+                cout<<"선량한 시민 돌이 사망했습니다..."<<endl;
                 //addBubble("선량한 시민 돌이 사망했습니다...");
             }
         }
@@ -187,6 +188,7 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
         ui->label->setText("Choose One."); // 선택이 안됐거나 예외상황일시.
         return;
     }
+
 }
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
