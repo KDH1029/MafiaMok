@@ -156,11 +156,15 @@ void MainWindow::placeStone(int row, int col, int value)
     {
         this->field->turn = false;
         if (value == this->field->team || value == this->field->team + 2)
+        {
             qDebug() << "Win!"; // 플레이어2 승리조건
             addBubble("You Win!", true);
+        }
         else
+        {
             qDebug() << "Lose!"; // 플레이어1 승리조건
             addBubble("You Lose!", true);
+        }
     }
 }
 
