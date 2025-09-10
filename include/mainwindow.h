@@ -30,6 +30,7 @@ public:
     void removeStone(int row, int col);
     void placeStone(int row, int col, int player);
     void showMafiaEffect(int row, int col, int stoneSize);
+    void End_event(bool identify);
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
@@ -44,6 +45,8 @@ private slots:
 
     void on_radioButton_3_clicked();
 
+    void on_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     Field *field;
@@ -54,6 +57,7 @@ private:
     QPointF mapToCell(const QPointF& pos);
     int playchoice;
     int player;
+    bool win_event;
     //int player2;
     int player_life;
     int seduce_ticket;

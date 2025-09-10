@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
     // QImage image(filename);
 
     playchoice = 0; // 처음엔 1번 플레이어 선택 상태
-
+    win_event=false;
     //player = 1;        // 이 컴퓨터는 1번 플레이어
     //player2 = 2;       // 상대 플레이어
     player_life = 5;   // 목숨 5, 시민을 5번 없애면 패배
@@ -106,7 +106,9 @@ void MainWindow::placeStone(int row, int col, int value)
 
     if (this->field->check())
     {
+
         qDebug() << "P1 win and P2 Lose!"; //플레이어1 승리조건
+        win_event=true;
     }
 
 
@@ -177,6 +179,8 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
                 // addBubble("선량한 시민 돌이 사망했습니다...");
                 if(player_life<=0){
                     qDebug() << "You Lose!"; //사용자 패배 조건(목숨이 깎이는 경우는 돌을 잘못 지우는 경우밖에 없으므로)
+                    win_event=true;
+
                 }
             }
         }
@@ -218,6 +222,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
     return QMainWindow::eventFilter(obj, event);
 }
 
+
 void MainWindow::on_radioButton_clicked()
 {
     playchoice = 0; // 돌 놓기
@@ -232,3 +237,17 @@ void MainWindow::on_radioButton_3_clicked()
 {
     playchoice = 2; // 돌 회유
 }
+
+void MainWindow::End_event(bool identify){
+    if(identify){
+        this->field->turn=false;
+    }
+    else this->field->turn=true; //다시 시작.
+    MainWindow();
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    delete this->ui;
+}
+
