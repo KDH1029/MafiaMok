@@ -259,7 +259,7 @@ void MainWindow::End_event(bool identify)
         this->field->turn = false;
     }
     else
-        this->field->turn = true; // 다시 시작.
+        this->field->turn = false;
 
     restart=true;
 
