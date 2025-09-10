@@ -15,6 +15,10 @@
 #include <QTimer>
 #include <QDebug>
 
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QScrollBar>
+
 using namespace std;
 
 MainWindow::MainWindow(QWidget *parent)
@@ -27,15 +31,21 @@ MainWindow::MainWindow(QWidget *parent)
 
     playchoice = 0;    // 처음엔 1번 플레이어 선택 상태
     player_life = 5;   // 목숨 5, 시민을 5번 없애면 패배
-    seduce_ticket = 5; // 회유티켓. 5개
-    restart = false;
+    seduce_ticket = 5; // 회유티켓. 일단 5로 하죠?
 
     this->field = new Field();
     this->udp = new Udp(this);
     connect(this->udp, &Udp::pointReceived, this, &MainWindow::handlePoint);
     connect(this->udp, &Udp::cmdReceived, this, &MainWindow::handleCmd);
 
-    this->stoneItems[20][20] = {nullptr}; //오목판
+    QWidget *container = new QWidget(this);
+    container->setMinimumSize(1, 1);
+    container->setFixedWidth(ui->scrollArea->width());
+    ui->scrollArea->setWidget(container);
+    ui->scrollArea->setWidgetResizable(false);
+    ui->scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    this->stoneItems[20][20] = {nullptr}; // 최대 20x20 오목판 가정
     drawBoard();
 }
 
@@ -58,28 +68,28 @@ void MainWindow::handlePoint(Point p)
             {
                 removeStone(p.x, p.y);
                 this->field->turn = true;
+                addBubble(QString("Removed stone at (%1, %2)").arg(p.x).arg(p.y), false);
             }
             break;
         case 1:
         case 2:
             placeStone(p.x, p.y, p.value);
+            addBubble(QString("Placed stone at (%1, %2)").arg(p.x).arg(p.y), false);
             break;
         case -1:
             if (this->field->seduce(p.x, p.y))
             {
                 this->field->turn = true;
+                addBubble(QString("Seduced"), false);
                 if (this->field->check())
                 {
                     this->field->turn = false;
                     qDebug() << "Lose!"; // 플레이어1 승리조건
+                    addBubble("You Lose!", false);
                 }
             }
             break;
         }
-    }
-    else
-    {
-        // err: 턴 오류
     }
 }
 
@@ -89,11 +99,13 @@ void MainWindow::handleCmd(const QString &cmd)
     {
         qDebug() << "You Lose!";
         this->field->turn = false;
+        addBubble("You Lose!", false);
     }
     else if (cmd == "LOSE")
     {
         qDebug() << "You Win!";
         this->field->turn = false;
+        addBubble("You Win!", false);
     }
 }
 
@@ -141,9 +153,15 @@ void MainWindow::placeStone(int row, int col, int value)
     {
         this->field->turn = false;
         if (value == this->field->team || value == this->field->team + 2)
+        {
             qDebug() << "Win!"; // 플레이어2 승리조건
+            addBubble("You Win!", true);
+        }
         else
+        {
             qDebug() << "Lose!"; // 플레이어1 승리조건
+            addBubble("You Lose!", true);
+        }
     }
 }
 
@@ -173,6 +191,7 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
         ui->label->setText("You placed stone");
         placeStone(cell.x(), cell.y(), this->field->team); // player마다 다른 돌
         this->udp->send(QString("%1,%2,%3").arg(cell.x()).arg(cell.y()).arg(this->field->team));
+        addBubble(QString("Placed stone at (%1, %2)").arg(cell.x()).arg(cell.y()), true);
     }
 
     else if (playchoice == 1 && this->field->turn)
@@ -190,6 +209,7 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
             if (this->field->remove(cell.x(), cell.y()))
             {
                 this->udp->send(QString("%1,%2,0").arg(cell.x()).arg(cell.y()));
+                addBubble(QString("Removed stone at (%1, %2)").arg(cell.x()).arg(cell.y()), true);
                 removeStone(cell.x(), cell.y());
                 ui->label->setText("Stone Distroied");
                 if (this->field->team == state)
@@ -200,6 +220,7 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
                     {
                         qDebug() << "You Lose!"; // 사용자 패배 조건(목숨이 깎이는 경우는 돌을 잘못 지우는 경우밖에 없으므로)
                         this->udp->send("LOSE");
+                        addBubble("You Lose!", true);
                         this->field->turn = false;
                     }
                 }
@@ -214,6 +235,7 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
             if (this->field->seduce(cell.x(), cell.y()))
             {
                 this->udp->send(QString("%1,%2,-1").arg(cell.x()).arg(cell.y()));
+                addBubble(QString("Seduce stone at (%1, %2)").arg(cell.x()).arg(cell.y()), true);
                 ui->label->setText("Stone Rehabilitated");
                 if (this->field->check())
                 {
@@ -222,6 +244,7 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
                     }
                     this->field->turn = false;
                     qDebug() << "Win!"; // 플레이어2 승리조건
+                    addBubble("You Win!", true);
                 }
             }
             seduce_ticket--; // 회유 쿠폰은 무조건 소비됨(횟수제한)
@@ -278,17 +301,6 @@ void MainWindow::on_radioButton_3_clicked()
 {
     playchoice = 2; // 돌 회유
 }
-
-void MainWindow::End_event(bool identify)
-{
-    if (identify)
-    {
-        this->field->turn = false;
-    }
-    else
-        this->field->turn = true; // 다시 시작.
-}
-
 void MainWindow::on_pushButton_clicked()
 {
     QApplication::quit();
@@ -296,9 +308,68 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    if (restart)
-    {
-        ;
-    }
+    delete this->field;
+    this->field = new Field();
+
+    playchoice = -1;
+    player_life = 5;
+    seduce_ticket = 5;
+
+    scene->clear();
+    drawBoard();
+
+    for (int r = 0; r < 20; ++r)
+        for (int c = 0; c < 20; ++c)
+            stoneItems[r][c] = nullptr;
+
+    ui->label->setText("Game restarted!");
 }
 
+void MainWindow::addBubble(const QString &message, bool isSender)
+{
+    QLabel *label = new QLabel(message);
+    label->setWordWrap(true);
+    label->setMaximumWidth(ui->scrollArea->width() - 60);
+    label->adjustSize();
+    label->setStyleSheet(isSender ? "background-color: #FFFFFF; border-radius: 10px; padding: 8px;" : "background-color: #FEE500; border-radius: 10px; padding: 8px;");
+    label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+
+    QHBoxLayout *layout = new QHBoxLayout;
+    layout->setContentsMargins(10, 5, 10, 5);
+
+    if (isSender)
+    {
+        layout->addStretch();
+        layout->addWidget(label);
+    }
+    else
+    {
+        layout->addWidget(label);
+        layout->addStretch();
+    }
+
+    QWidget *bubbleWidget = new QWidget;
+    bubbleWidget->setLayout(layout);
+
+    QWidget *container = ui->scrollArea->widget();
+    bubbleWidget->setParent(container);
+    bubbleWidget->show();
+
+    int yOffset = 0;
+    for (QObject *child : container->children())
+    {
+        QWidget *w = qobject_cast<QWidget *>(child);
+        if (w && w != bubbleWidget)
+        {
+            yOffset += w->height() + 10;
+        }
+    }
+
+    int containerWidth = container->width();
+    int bubbleWidth = bubbleWidget->sizeHint().width();
+    int xOffset = isSender ? containerWidth - bubbleWidth - 10 : 10;
+
+    bubbleWidget->move(xOffset, yOffset);
+    container->resize(container->width(), yOffset + bubbleWidget->height() + 20);
+    ui->scrollArea->verticalScrollBar()->setValue(ui->scrollArea->verticalScrollBar()->maximum());
+}
