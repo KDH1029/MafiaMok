@@ -42,7 +42,7 @@ void Udp::get_udp()
             emit pointReceived(Point{arr[0].toInt(), arr[1].toInt(), arr[2].toInt()});
         }
         if (arr.size() == 1){
-            emit cmdRecieved(message);
+            emit cmdReceived(message);
         }
     }
 }
