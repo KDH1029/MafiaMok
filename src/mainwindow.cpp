@@ -1,4 +1,4 @@
-#define player true
+#define Player true
 
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"

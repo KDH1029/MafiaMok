@@ -45,7 +45,7 @@ Field::Field(void)
             }
         }
     }
-#if player
+#if Player
     this->turn = false;
     this->team = 2;
 #else
