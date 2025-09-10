@@ -29,7 +29,7 @@ public:
     void on_actionOpen_Image_triggered();
     void drawBoard();
     void removeStone(int row, int col);
-    void placeStone(int row, int col, int player);
+    void placeStone(int row, int col, int value);
     void showMafiaEffect(int row, int col, int stoneSize);
     void End_event(bool identify);
     MainWindow(QWidget *parent = nullptr);
@@ -54,15 +54,14 @@ private:
     Ui::MainWindow *ui;
     Field *field;
     Udp *udp;
+
     QGraphicsScene* scene;
     int boardSize = 19;          // 오목판 19x19
     int cellSize = 50;    // 각 칸 크기
     QPointF mapToCell(const QPointF& pos);
+    
     int playchoice;
-    int player;
-    bool win_event;
     bool restart;
-    //int player2;
     int player_life;
     int seduce_ticket;
 };

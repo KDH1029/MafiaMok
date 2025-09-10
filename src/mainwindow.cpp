@@ -29,9 +29,6 @@ MainWindow::MainWindow(QWidget *parent)
     // QImage image(filename);
 
     playchoice = 0; // 처음엔 1번 플레이어 선택 상태
-    win_event = false;
-    // player = 1;        // 이 컴퓨터는 1번 플레이어
-    // player2 = 2;       // 상대 플레이어
     player_life = 5;   // 목숨 5, 시민을 5번 없애면 패배
     seduce_ticket = 5; // 회유티켓. 일단 5로 하죠?
     restart=false;
@@ -115,9 +112,11 @@ void MainWindow::placeStone(int row, int col, int value)
 
     if (this->field->check())
     {
-        qDebug() << "P1 win and P2 Lose!"; // 플레이어1 승리조건
-        win_event = true;
-        End_event(win_event);
+        this->field->turn = false;
+        if(value = this->field->team)
+            qDebug() << "Win!"; // 플레이어2 승리조건
+        else
+            qDebug() << "Lose!"; // 플레이어1 승리조건
     }
 }
 
@@ -196,8 +195,7 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
                 if (player_life <= 0)
                 {
                     qDebug() << "You Lose!"; // 사용자 패배 조건(목숨이 깎이는 경우는 돌을 잘못 지우는 경우밖에 없으므로)
-                    win_event = true;
-                    End_event(win_event);
+                    this->field->turn = false;
                 }
             }
             this->udp->send(QString("%1,%2,0").arg(cell.x()).arg(cell.y()));
@@ -250,19 +248,6 @@ void MainWindow::on_radioButton_2_clicked()
 void MainWindow::on_radioButton_3_clicked()
 {
     playchoice = 2; // 돌 회유
-}
-
-void MainWindow::End_event(bool identify)
-{
-    if (identify)
-    {
-        this->field->turn = false;
-    }
-    else
-        this->field->turn = false;
-
-    restart=true;
-
 }
 
 void MainWindow::on_pushButton_clicked()
