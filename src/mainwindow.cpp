@@ -25,12 +25,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->graphicsView->setScene(scene);
     ui->graphicsView->viewport()->installEventFilter(this);
 
-    // QString filename = "/home/yu/MafiaMook/my_image2.jpg";
-    // QImage image(filename);
-
     playchoice = 0;    // 처음엔 1번 플레이어 선택 상태
     player_life = 5;   // 목숨 5, 시민을 5번 없애면 패배
-    seduce_ticket = 5; // 회유티켓. 일단 5로 하죠?
+    seduce_ticket = 5; // 회유티켓. 5개
     restart = false;
 
     this->field = new Field();
@@ -38,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this->udp, &Udp::pointReceived, this, &MainWindow::handlePoint);
     connect(this->udp, &Udp::cmdReceived, this, &MainWindow::handleCmd);
 
-    this->stoneItems[20][20] = {nullptr}; // 최대 20x20 오목판 가정
+    this->stoneItems[20][20] = {nullptr}; //오목판
     drawBoard();
 }
 
@@ -109,7 +106,7 @@ void MainWindow::drawBoard()
         scene->addLine(i * cellSize, 0, i * cellSize, (boardSize - 1) * cellSize); // 세로
     }
     scene->addLine(-1, -1 * cellSize, (boardSize - 1) * cellSize, -1 * cellSize);
-    scene->addLine(19, 19 * cellSize, (boardSize - 1) * cellSize, 19 * cellSize); // 가로 //격자를 살짝 내리는 방향으로 .
+    scene->addLine(19, 19 * cellSize, (boardSize - 1) * cellSize, 19 * cellSize);//위젯 흔들림을 막기 위한 선들
     scene->addLine(19 * cellSize, 0, 19 * cellSize, (boardSize - 1) * cellSize);
     scene->addLine(-1 * cellSize, 0, -1 * cellSize, (boardSize - 1) * cellSize);
 }
@@ -156,31 +153,11 @@ void MainWindow::removeStone(int row, int col)
     if (stoneItems[row][col] != nullptr)
     {
         scene->removeItem(stoneItems[row][col]);
-        delete stoneItems[row][col]; // 메모리 정리
+        delete stoneItems[row][col]; //메모리 정리
         stoneItems[row][col] = nullptr;
     }
 }
 
-void MainWindow::showMafiaEffect(int row, int col, int stoneSize)
-{
-
-    // 이거는 시간 되면 넣어라. 간단한 효과인데 로그로 대체할 수 있다
-    //  간단한 펄스 효과: QTimer로 크기 변화를 줌
-    //  QTimer* timer = new QTimer(this);
-    //  connect(timer, &QTimer::timeout, [effect]() {
-    //      static bool growing = true;
-    //      qreal scaleFactor = effect->scale();
-    //      if (growing) {
-    //          scaleFactor += 0.05;
-    //          if (scaleFactor >= 1.5) growing = false;
-    //      } else {
-    //          scaleFactor -= 0.05;
-    //          if (scaleFactor <= 1.0) growing = true;
-    //      }
-    //      effect->setScale(scaleFactor);
-    //  });
-    //  timer->start(50);  // 50ms마다
-}
 
 void MainWindow::onGraphicsViewClicked(QPointF pos)
 {                                  // 여기서 발생한 모든 이벤트는 상대에게도 전송. 전송한 이벤트는 상대의 수신 함수에서 처리
@@ -240,6 +217,9 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
                 ui->label->setText("Stone Rehabilitated");
                 if (this->field->check())
                 {
+                    for(int i=0;i<8;i++){
+
+                    }
                     this->field->turn = false;
                     qDebug() << "Win!"; // 플레이어2 승리조건
                 }
@@ -256,10 +236,24 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
         ui->label->setText("Wrong Access"); // 선택이 안됐거나 예외상황일시.
         return;
     }
+    //int randomValue = qsrand()%3;
+
+}
+
+void MainWindow::Mafia_act(int row, int col)
+{
+    this->udp->send(QString("%1,%2,0").arg(row).arg(col));
+    removeStone(row, col);
+    ui->label->setText("Stone Distroied");
+
+    int state = this->field->board[row][col]->value;
+    if (this->field->team == state) {
+        cout << "시민 돌이 마피아에게 사망했습니다..." << endl;
+    }
 }
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
-{ // 마우스 이벤트 캡쳐 함수.
+{ // 마우스 이벤트 캡쳐 함수
     if (obj == ui->graphicsView->viewport() && event->type() == QEvent::MouseButtonPress)
     {
         QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
@@ -307,3 +301,4 @@ void MainWindow::on_pushButton_2_clicked()
         ;
     }
 }
+

@@ -118,6 +118,7 @@ bool Field::check(void)
         while (node->neighbor[i] && (node->neighbor[i]->value == state || node->neighbor[i]->value == state + 2))
         {
             node = node->neighbor[i];
+
         }
         while (node->neighbor[7 - i] && (node->neighbor[7 - i]->value == state || node->neighbor[7 - i]->value == state + 2))
         {

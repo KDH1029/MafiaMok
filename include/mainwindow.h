@@ -32,6 +32,7 @@ public:
     void placeStone(int row, int col, int value);
     void showMafiaEffect(int row, int col, int stoneSize);
     void End_event(bool identify);
+    void Mafia_act(int row, int col);
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
