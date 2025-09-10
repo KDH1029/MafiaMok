@@ -13,7 +13,6 @@
 #include <QGraphicsItemAnimation>
 #include <QTimeLine>
 #include <QTimer>
-#include <QDebug>
 
 #include <QHBoxLayout>
 #include <QLabel>
@@ -59,9 +58,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::handlePoint(Point p)
 {
-    qDebug() << p.x;
-    qDebug() << p.y;
-
     if (!this->field->turn)
     {
         switch (p.value)
@@ -87,7 +83,6 @@ void MainWindow::handlePoint(Point p)
                 if (this->field->check())
                 {
                     this->field->turn = false;
-                    qDebug() << "Lose!"; // 플레이어1 승리조건
                     addBubble("You Lose!", false);
                 }
             }
@@ -100,13 +95,11 @@ void MainWindow::handleCmd(const QString &cmd)
 {
     if (cmd == "WIN")
     {
-        qDebug() << "You Lose!";
         this->field->turn = false;
         addBubble("You Lose!", false);
     }
     else if (cmd == "LOSE")
     {
-        qDebug() << "You Win!";
         this->field->turn = false;
         addBubble("You Win!", false);
     }
@@ -137,10 +130,9 @@ void MainWindow::placeStone(int row, int col, int value)
 {
     if (this->field->place(row, col, value) == false)
     {
-        qDebug() << "Wrong Access!";
         return;
     }
-
+    addBubble(QString("Placed stone at (%1, %2)").arg(cell.x()).arg(cell.y()), value == this->field->team);
     QBrush brush = (value % 2) ? Qt::black : Qt::white;
     int stoneSize = cellSize - 4;
     int centerX = col * cellSize;
@@ -157,12 +149,10 @@ void MainWindow::placeStone(int row, int col, int value)
         this->field->turn = false;
         if (value == this->field->team || value == this->field->team + 2)
         {
-            qDebug() << "Win!"; // 플레이어2 승리조건
             addBubble("You Win!", true);
         }
         else
         {
-            qDebug() << "Lose!"; // 플레이어1 승리조건
             addBubble("You Lose!", true);
         }
     }
@@ -214,7 +204,6 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
         ui->label->setText("You placed stone");
         placeStone(cell.x(), cell.y(), this->field->team); // player마다 다른 돌
         this->udp->send(QString("%1,%2,%3").arg(cell.x()).arg(cell.y()).arg(this->field->team));
-        addBubble(QString("Placed stone at (%1, %2)").arg(cell.x()).arg(cell.y()), true);
     }
 
     else if (playchoice == 1 && this->field->turn)
@@ -238,10 +227,9 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
                 if (this->field->team == state)
                 {
                     player_life--;
-                    cout << "선량한 시민 돌이 사망했습니다..." << endl;
+                    addBubble("선량한 시민 돌이 사망했습니다...", true);
                     if (player_life <= 0)
                     {
-                        qDebug() << "You Lose!"; // 사용자 패배 조건(목숨이 깎이는 경우는 돌을 잘못 지우는 경우밖에 없으므로)
                         this->udp->send("LOSE");
                         addBubble("You Lose!", true);
                         this->field->turn = false;
@@ -263,7 +251,6 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
                 if (this->field->check())
                 {
                     this->field->turn = false;
-                    qDebug() << "Win!"; // 플레이어2 승리조건
                     addBubble("You Win!", true);
                 }
             }
