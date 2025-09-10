@@ -115,11 +115,11 @@ bool Field::check(void)
         Node *node = this->board[y][x];
         int state = node->value;
         int count = 1;
-        while (node->neighbor[i] && (node->neighbor[i]->value == state || node->neighbor[i]->value == 5 - state))
+        while (node->neighbor[i] && (node->neighbor[i]->value == state || node->neighbor[i]->value == state + 2))
         {
             node = node->neighbor[i];
         }
-        while (node->neighbor[7 - i] && (node->neighbor[7 - i]->value == state || node->neighbor[7 - i]->value == 5 - state))
+        while (node->neighbor[7 - i] && (node->neighbor[7 - i]->value == state || node->neighbor[7 - i]->value == state + 2))
         {
             node = node->neighbor[7 - i];
             count++;
