@@ -53,7 +53,7 @@ private:
     int cellSize = 50;    // 각 칸 크기
     QPointF mapToCell(const QPointF& pos);
     int playchoice;
-    //int player;
+    int player;
     //int player2;
     int player_life;
     int seduce_ticket;
