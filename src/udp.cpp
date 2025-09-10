@@ -1,4 +1,10 @@
+
+#if player
+#define IP "192.168.0.37"
+#else
 #define IP "192.168.0.45"
+#endif
+
 #define PORT 9999
 
 #include "udp.h"
