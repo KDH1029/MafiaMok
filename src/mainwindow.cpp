@@ -18,6 +18,8 @@
 #include <QLabel>
 #include <QScrollBar>
 
+#include <random>
+
 using namespace std;
 
 MainWindow::MainWindow(QWidget *parent)
@@ -36,6 +38,26 @@ MainWindow::MainWindow(QWidget *parent)
     this->udp = new Udp(this);
     connect(this->udp, &Udp::pointReceived, this, &MainWindow::handlePoint);
     connect(this->udp, &Udp::cmdReceived, this, &MainWindow::handleCmd);
+
+#if Player
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dist(0, 1);
+
+    this->field->turn = dist(gen);
+    if (this->field->turn)
+    {
+        this->field->team = 1;
+        addBubble("You are the First Player", true);
+        this->udp->send("SECOND");
+    }
+    else
+    {
+        this->field->team = 2;
+        addBubble("You are the Second Player", true);
+        this->udp->send("FIRST");
+    }
+#endif
 
     QWidget *container = new QWidget(this);
     container->setMinimumSize(1, 1);
@@ -99,6 +121,38 @@ void MainWindow::handleCmd(const QString &cmd)
         this->field->turn = false;
         addBubble("You Win!", false);
     }
+    else if (cmd == "RESET")
+    {
+        delete this->field;
+        this->field = new Field();
+
+        playchoice = -1;
+        player_life = 5;
+        seduce_ticket = 5;
+
+        scene->clear();
+        drawBoard();
+
+        for (int r = 0; r < 20; ++r)
+            for (int c = 0; c < 20; ++c)
+                stoneItems[r][c] = nullptr;
+
+        ui->label->setText("Game restarted by opponent!");
+    }
+    else if (cmd == "QUIT")
+    {
+        QApplication::quit();
+    }
+    else if (cmd == "FIRST")
+    {
+        this->field->turn = false;
+        this->field->team = 2;
+    }
+    else if (cmd == "SECOND")
+    {
+        this->field->turn = true;
+        this->field->team = 1;
+    }
 }
 
 void MainWindow::drawBoard()
@@ -110,7 +164,7 @@ void MainWindow::drawBoard()
         scene->addLine(i * cellSize, 0, i * cellSize, (boardSize - 1) * cellSize); // 세로
     }
     scene->addLine(-1, -1 * cellSize, (boardSize - 1) * cellSize, -1 * cellSize);
-    scene->addLine(19, 19 * cellSize, (boardSize - 1) * cellSize, 19 * cellSize);//위젯 흔들림을 막기 위한 선들
+    scene->addLine(19, 19 * cellSize, (boardSize - 1) * cellSize, 19 * cellSize); // 위젯 흔들림을 막기 위한 선들
     scene->addLine(19 * cellSize, 0, 19 * cellSize, (boardSize - 1) * cellSize);
     scene->addLine(-1 * cellSize, 0, -1 * cellSize, (boardSize - 1) * cellSize);
 }
@@ -160,11 +214,10 @@ void MainWindow::removeStone(int row, int col)
     if (stoneItems[row][col] != nullptr)
     {
         scene->removeItem(stoneItems[row][col]);
-        delete stoneItems[row][col]; //메모리 정리
+        delete stoneItems[row][col]; // 메모리 정리
         stoneItems[row][col] = nullptr;
     }
 }
-
 
 void MainWindow::onGraphicsViewClicked(QPointF pos)
 {                                  // 여기서 발생한 모든 이벤트는 상대에게도 전송. 전송한 이벤트는 상대의 수신 함수에서 처리
@@ -226,8 +279,8 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
                 ui->label->setText("Stone Rehabilitated");
                 if (this->field->check())
                 {
-                    for(int i=0;i<8;i++){
-
+                    for (int i = 0; i < 8; i++)
+                    {
                     }
                     this->field->turn = false;
                     addBubble("You Win!", true);
@@ -245,10 +298,8 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
         ui->label->setText("Wrong Access"); // 선택이 안됐거나 예외상황일시.
         return;
     }
-    //int randomValue = qsrand()%3;
-
+    // int randomValue = qsrand()%3;
 }
-
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 { // 마우스 이벤트 캡쳐 함수
@@ -279,6 +330,7 @@ void MainWindow::on_radioButton_3_clicked()
 void MainWindow::on_pushButton_clicked()
 {
     QApplication::quit();
+    this->udp->send("QUIT");
 }
 
 void MainWindow::on_pushButton_2_clicked()
@@ -298,6 +350,27 @@ void MainWindow::on_pushButton_2_clicked()
             stoneItems[r][c] = nullptr;
 
     ui->label->setText("Game restarted!");
+    this->udp->send("RESET");
+
+#if Player
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dist(0, 1);
+
+    this->field->turn = dist(gen);
+    if (this->field->turn)
+    {
+        this->field->team = 1;
+        addBubble("You are the First Player", true);
+        this->udp->send("SECOND");
+    }
+    else
+    {
+        this->field->team = 2;
+        addBubble("You are the Second Player", true);
+        this->udp->send("FIRST");
+    }
+#endif
 }
 
 void MainWindow::addBubble(const QString &message, bool isSender)

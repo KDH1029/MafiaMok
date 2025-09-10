@@ -1,5 +1,3 @@
-#include "setting.h"
-
 #define BOARD_SIZE 19
 #define LEN 5
 
@@ -47,13 +45,6 @@ Field::Field(void)
             }
         }
     }
-#if Player
-    this->turn = false;
-    this->team = 2;
-#else
-    this->turn = true;
-    this->team = 1;
-#endif
 }
 
 bool Field::place(int x, int y, int value)
