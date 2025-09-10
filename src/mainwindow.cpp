@@ -28,28 +28,16 @@ MainWindow::MainWindow(QWidget *parent)
 
     playchoice = 0; // 처음엔 1번 플레이어 선택 상태
 
-    player = 1;        // 이 컴퓨터는 1번 플레이어
-    player2 = 2;       // 상대 플레이어
+    //player = 1;        // 이 컴퓨터는 1번 플레이어
+    //player2 = 2;       // 상대 플레이어
     player_life = 5;   // 목숨 5, 시민을 5번 없애면 패배
     seduce_ticket = 5; // 회유티켓. 일단 5로 하죠?
-
-    this->board.resize(boardSize);
-    for (int i = 0; i < boardSize; i++)
-    {
-        this->board[i].resize(boardSize);
-        for (int j = 0; j < boardSize; j++)
-        {
-            this->board[i][j] = 0; // 빈칸 초기화
-        }
-    }
 
     this->field = new Field();
     this->udp = new Udp(this);
     connect(this->udp, &Udp::received, this, &MainWindow::handlePoint);
 
     drawBoard();
-
-    udp->send("1,1,1");
 }
 
 MainWindow::~MainWindow()
@@ -64,24 +52,13 @@ void MainWindow::handlePoint(Point p)
 
     if (!this->field->turn)
     {
-        if (this->field->place(p.x, p.y, p.value))
-        {
-            if (this->field->check())
-            {
-                // win
-            }
-            // 보드 그리기
-        }
-        else
-        {
-            // err: 잘못된 위치
-        };
-        this->field->turn = true;
+        placeStone(p.x, p.y, p.value);
     }
     else
     {
         // err: 턴 오류
     }
+    qDebug() << "handlePoint done";
 }
 
 void MainWindow::drawBoard()
@@ -108,17 +85,15 @@ QPointF MainWindow::mapToCell(const QPointF &pos)
 
 QGraphicsEllipseItem *stoneItems[20][20] = {nullptr}; // 최대 20x20 오목판 가정
 
-void MainWindow::placeStone(int row, int col, int player)
+void MainWindow::placeStone(int row, int col, int value)
 {
-    if (row < 0 || row >= boardSize || col < 0 || col > boardSize || this->board[row][col] != 0)
+    if (this->field->place(row, col, value) == false)
     {
         qDebug() << "Wrong Access!";
         return;
     }
 
-    this->board[row][col] = player;
-
-    QBrush brush = (player == 1) ? Qt::black : Qt::white;
+    QBrush brush = (value % 2) ? Qt::black : Qt::white;
     int stoneSize = cellSize - 4;
     int centerX = col * cellSize;
     int centerY = row * cellSize;
@@ -128,6 +103,9 @@ void MainWindow::placeStone(int row, int col, int player)
 
     QGraphicsEllipseItem *stone = scene->addEllipse(x, y, stoneSize, stoneSize, QPen(), brush);
     stoneItems[row][col] = stone; // 저장
+
+    this->udp->send("1,1,1");
+    qDebug() << "handlePoint";
 }
 
 // 돌 제거 함수
@@ -138,7 +116,7 @@ void MainWindow::removeStone(int row, int col)
         scene->removeItem(stoneItems[row][col]);
         delete stoneItems[row][col]; // 메모리 정리
         stoneItems[row][col] = nullptr;
-        this->board[row][col] = 0;
+        //this->board[row][col] = 0;
     }
 }
 
@@ -166,11 +144,12 @@ void MainWindow::showMafiaEffect(int row, int col, int stoneSize)
 void MainWindow::onGraphicsViewClicked(QPointF pos)
 {                                  // 여기서 발생한 모든 이벤트는 상대에게도 전송. 전송한 이벤트는 상대의 수신 함수에서 처리
     QPointF cell = mapToCell(pos); // clicked-->포인트 가져오기
-    if (playchoice == 0)
+    if (playchoice == 0&&this->field->turn)
     {                                           // 돌 놓기 선택
-        placeStone(cell.x(), cell.y(), player); // player마다 다른 돌
+        placeStone(cell.x(), cell.y(), this->field->team); // player마다 다른 돌
     }
 
+    /*
     else if (playchoice == 1)
     { // 돌 제거 선택
         if (this->board[cell.x()][cell.y()] != player)
@@ -215,7 +194,7 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
     }
 
 
-
+    */
 }
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)

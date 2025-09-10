@@ -46,6 +46,8 @@ Field::Field(void)
             }
         }
     }
+
+    this->turn = true;
 }
 
 bool Field::place(int x, int y, int value)
@@ -59,19 +61,7 @@ bool Field::place(int x, int y, int value)
     if (this->board[y][x]->value == 0)
     {
         this->board[y][x]->value = value;
-
-        for (int i = 0; i < BOARD_SIZE; i++)
-        {
-            for (int j = 0; j < BOARD_SIZE; j++)
-            {
-                std::cout << this->board[i][j]->value;
-            }
-            std::cout << std::endl;
-        }
-
-        std::cout << std::endl
-                  << std::endl
-                  << std::endl;
+        this->turn = !this->turn;
         return true;
     }
     return false;
