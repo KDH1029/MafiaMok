@@ -31,6 +31,7 @@ public:
     void removeStone(int row, int col);
     void placeStone(int row, int col, int value);
     void showMafiaEffect(int row, int col, int stoneSize);
+    void addBubble(const QString &message, bool isSender);
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 

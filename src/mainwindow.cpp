@@ -302,3 +302,52 @@ void MainWindow::on_pushButton_2_clicked()
 
     ui->label->setText("Game restarted!");
 }
+
+void MainWindow::addBubble(const QString &message, bool isSender)
+{
+    QLabel *label = new QLabel(message);
+    label->setWordWrap(true);
+    label->setMaximumWidth(ui->scrollArea->width() - 60);
+    label->adjustSize();
+    label->setStyleSheet(isSender ? "background-color: #FFFFFF; border-radius: 10px; padding: 8px;" : "background-color: #FEE500; border-radius: 10px; padding: 8px;");
+    label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+
+    QHBoxLayout *layout = new QHBoxLayout;
+    layout->setContentsMargins(10, 5, 10, 5);
+
+    if (isSender)
+    {
+        layout->addStretch();
+        layout->addWidget(label);
+    }
+    else
+    {
+        layout->addWidget(label);
+        layout->addStretch();
+    }
+
+    QWidget *bubbleWidget = new QWidget;
+    bubbleWidget->setLayout(layout);
+
+    QWidget *container = ui->scrollArea->widget();
+    bubbleWidget->setParent(container);
+    bubbleWidget->show();
+
+    int yOffset = 0;
+    for (QObject *child : container->children())
+    {
+        QWidget *w = qobject_cast<QWidget *>(child);
+        if (w && w != bubbleWidget)
+        {
+            yOffset += w->height() + 10;
+        }
+    }
+
+    int containerWidth = container->width();
+    int bubbleWidth = bubbleWidget->sizeHint().width();
+    int xOffset = isSender ? containerWidth - bubbleWidth - 10 : 10;
+
+    bubbleWidget->move(xOffset, yOffset);
+    container->resize(container->width(), yOffset + bubbleWidget->height() + 20);
+    ui->scrollArea->verticalScrollBar()->setValue(ui->scrollArea->verticalScrollBar()->maximum());
+}
