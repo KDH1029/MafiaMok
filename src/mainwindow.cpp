@@ -76,7 +76,14 @@ void MainWindow::handlePoint(Point p)
 
 void MainWindow::handleCmd(const QString &cmd)
 {
-
+    if(cmd == "WIN"){
+        qDebug() << "You Lose!";
+        this->field->turn = false;
+    }
+    else if(cmd == "LOSE"){
+        qDebug() << "You Win!";
+        this->field->turn = false;
+    }
 }
 
 void MainWindow::drawBoard()
@@ -200,6 +207,7 @@ void MainWindow::onGraphicsViewClicked(QPointF pos)
                     if (player_life <= 0)
                     {
                         qDebug() << "You Lose!"; // 사용자 패배 조건(목숨이 깎이는 경우는 돌을 잘못 지우는 경우밖에 없으므로)
+                        this->udp->send("LOSE");
                         this->field->turn = false;
                     }
                 }
